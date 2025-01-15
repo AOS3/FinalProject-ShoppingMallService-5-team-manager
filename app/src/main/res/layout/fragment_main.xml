@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="mainViewModel"
+            type="com.judamie_manager.viewmodel.fragmentviewmodel.MainViewModel" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:transitionGroup="true">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbarMain"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:titleCentered="true"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:paddingHorizontal="16dp"
+            android:paddingTop="24dp"
+            android:paddingBottom="24dp">
+
+            <Button
+                android:id="@+id/button"
+                style="@style/Widget.Material3.Button.IconButton.Outlined"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:text="픽업지 관리"
+                android:textColor="@color/black"
+                android:onClick="@{(view) -> mainViewModel.buttonMainPickupOnClick()}"/>
+
+            <Button
+                android:id="@+id/button2"
+                style="@style/Widget.Material3.Button.IconButton.Outlined"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:text="거래 처리"
+                android:textColor="@color/black"
+                android:onClick="@{(view) -> mainViewModel.buttonMainTranListOnClick()}"/>
+
+            <Button
+                android:id="@+id/button3"
+                style="@style/Widget.Material3.Button.IconButton.Outlined"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:text="거래 내역"
+                android:textColor="@color/black"
+                android:onClick="@{(view) -> mainViewModel.buttonMainTranDetailOnClick()}"/>
+
+            <Button
+                android:id="@+id/button4"
+                style="@style/Widget.Material3.Button.IconButton.Outlined"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:text="쿠폰 등록"
+                android:textColor="@color/black"
+                android:onClick="@{(view) -> mainViewModel.buttonMainCouponOnClick()}"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+</layout>

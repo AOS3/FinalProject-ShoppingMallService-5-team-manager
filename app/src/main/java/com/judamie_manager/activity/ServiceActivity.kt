@@ -1,0 +1,118 @@
+package com.judamie_manager.activity
+
+import android.os.Bundle
+import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.commit
+import com.google.android.material.transition.MaterialSharedAxis
+import com.judamie_manager.R
+import com.judamie_manager.databinding.ActivityServiceBinding
+import com.judamie_manager.map.PickupGoogleMapFragment
+import com.judamie_manager.ui.fragment.AddCouponFragment
+import com.judamie_manager.ui.fragment.AddPickupLocationFragment
+import com.judamie_manager.ui.fragment.CompletedTransactionsListFragment
+import com.judamie_manager.ui.fragment.CouponListFragment
+import com.judamie_manager.ui.fragment.DaumApiFragment
+import com.judamie_manager.ui.fragment.MainFragment
+import com.judamie_manager.ui.fragment.ProcessingTransactionFragment
+import com.judamie_manager.ui.fragment.SettingPickupLocationFragment
+import com.judamie_manager.ui.fragment.ShowOneCompletedTransactionDetailFragment
+import com.judamie_manager.ui.fragment.TransactionsListFragment
+import com.judamie_manager.util.ServiceFragmentName
+
+
+class ServiceActivity : AppCompatActivity() {
+
+    lateinit var activityServiceBinding: ActivityServiceBinding
+
+    // 현재 Fragment와 다음 Fragment를 담을 변수(애니메이션 이동 때문에...)
+    var newFragment: Fragment? = null
+    var oldFragment: Fragment? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
+
+        activityServiceBinding = DataBindingUtil.setContentView(this@ServiceActivity, R.layout.activity_service)
+
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
+
+        // 첫 프래그먼트를 보여준다.
+        replaceFragment(ServiceFragmentName.MAIN_FRAGMENT, false, false, null)
+    }
+
+    // 프래그먼트를 교체하는 함수
+    fun replaceFragment(fragmentName: ServiceFragmentName, isAddToBackStack:Boolean, animate:Boolean, dataBundle: Bundle?){
+
+        // newFragment가 null이 아니라면 oldFragment 변수에 담아준다.
+        if(newFragment != null){
+            oldFragment = newFragment
+        }
+        // 프래그먼트 객체
+        newFragment = when(fragmentName){
+            // 게시판 메인 화면
+            ServiceFragmentName.MAIN_FRAGMENT -> MainFragment()
+            // 쿠폰 목록 화면
+            ServiceFragmentName.COUPON_LIST_FRAGMENT -> CouponListFragment()
+            // 쿠폰 추가 화면
+            ServiceFragmentName.ADD_COUPON_FRAGMENT -> AddCouponFragment()
+            // 거래 완료 내역 목록 화면
+            ServiceFragmentName.COMPLETED_TRANSACTIONS_LIST_FRAGMENT -> CompletedTransactionsListFragment()
+            // 거래 완료 내역 상세 보기 화면
+            ServiceFragmentName.SHOW_ONE_COMPLETED_TRANSACTION_DETAIL_FRAGMENT -> ShowOneCompletedTransactionDetailFragment()
+            // 거래 처리 중인 내역 목록 보기 화면
+            ServiceFragmentName.TRANSACTIONS_LIST_FRAGMENT -> TransactionsListFragment()
+            // 거래 처리 중 내역 상세 보기 화면
+            ServiceFragmentName.PROCESSING_TRANSACTION_FRAGMENT -> ProcessingTransactionFragment()
+            // 픽업지 관리 화면
+            ServiceFragmentName.SETTING_PICKUP_LOCATION -> SettingPickupLocationFragment()
+            // 픽업지 추가 화면
+            ServiceFragmentName.ADD_PICKUP_LOCATION_FRAGMENT -> AddPickupLocationFragment()
+            // 다음 API 화면
+            ServiceFragmentName.DAUM_API_FRAGMENT -> DaumApiFragment()
+            // 픽업지 구글 지도 화면
+            ServiceFragmentName.PICKUP_GOOGLE_MAP_FRAGMENT -> PickupGoogleMapFragment()
+        }
+
+        // bundle 객체가 null이 아니라면
+        if(dataBundle != null){
+            newFragment?.arguments = dataBundle
+        }
+
+        // 프래그먼트 교체
+        supportFragmentManager.commit{
+
+            if(animate) {
+                // 만약 이전 프래그먼트가 있다면
+                if(oldFragment != null){
+                    oldFragment?.exitTransition = MaterialSharedAxis(MaterialSharedAxis.X, /* forward= */ true)
+                    oldFragment?.reenterTransition = MaterialSharedAxis(MaterialSharedAxis.X, /* forward= */ false)
+                }
+
+                newFragment?.exitTransition = MaterialSharedAxis(MaterialSharedAxis.X, /* forward= */ true)
+                newFragment?.reenterTransition = MaterialSharedAxis(MaterialSharedAxis.X, /* forward= */ false)
+                newFragment?.enterTransition = MaterialSharedAxis(MaterialSharedAxis.X, /* forward= */ true)
+                newFragment?.returnTransition = MaterialSharedAxis(MaterialSharedAxis.X, /* forward= */ false)
+            }
+
+            replace(R.id.fragmentContainerViewService, newFragment!!)
+            if(isAddToBackStack){
+                addToBackStack(fragmentName.str)
+            }
+        }
+    }
+
+    // 프래그먼트를 BackStack에서 제거하는 메서드
+    fun removeFragment(fragmentName: ServiceFragmentName){
+        supportFragmentManager.popBackStack(fragmentName.str, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+    }
+}
