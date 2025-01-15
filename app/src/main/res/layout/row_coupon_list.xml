@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <data>
+        <variable
+            name="rowCouponListViewModel"
+            type="com.judamie_manager.viewmodel.rowviewmodel.RowCouponListViewModel" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/textViewCouponName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:paddingEnd="8dp"
+            android:text="@{rowCouponListViewModel.textViewCouponNameText}"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/textViewCouponDate"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:gravity="end"
+            android:maxLines="1"
+            android:paddingEnd="8dp"
+            android:text="@{rowCouponListViewModel.textViewCouponDateText}"
+            android:textColor="#85000000"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+</layout>

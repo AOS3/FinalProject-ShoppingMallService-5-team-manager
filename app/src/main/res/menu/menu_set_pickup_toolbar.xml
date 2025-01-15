@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/showPickupMap"
+        android:icon="@drawable/location_on_24dp_5f6368_fill1_wght500_grad0_opsz24"
+        android:title="Item"
+        app:showAsAction="always" />
+</menu>

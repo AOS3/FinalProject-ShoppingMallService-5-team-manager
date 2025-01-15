@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="settingPickupLocationViewModel"
+            type="com.judamie_manager.viewmodel.fragmentviewmodel.SettingPickupLocationViewModel" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:transitionGroup="true">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbarMain7"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:titleCentered="true"
+            app:navigationIcon="@drawable/arrow_back_24px"
+            app:onNavigationClickSettingPickupLocation="@{settingPickupLocationViewModel.settingPickupLocationFragment}"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <CheckBox
+                android:id="@+id/checkBoxAllChecking"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="전체선택"
+                android:checked="@{settingPickupLocationViewModel.checkBoxPickupAllChecked}"
+                android:onClick="@{(view) -> settingPickupLocationViewModel.checkBoxPickupAllOnClick()}"/>
+
+            <Button
+                android:id="@+id/buttonSelectionDelete"
+                style="@style/Widget.Material3.Button.IconButton.Outlined"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="15dp"
+                android:text="    선택 삭제    "
+                android:textColor="@color/black"
+                android:onClick="@{(view) -> settingPickupLocationViewModel.buttonSelectionDeleteOnClick()}" />
+        </LinearLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <!-- RecyclerView -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewPickupLocation"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <!-- FloatingActionButton -->
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fabAddPickup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end|bottom"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="16dp"
+                android:clickable="true"
+                android:src="@drawable/icon_fab"
+                android:tint="@null"
+                app:backgroundTint="#8000696B"
+                android:onClick="@{(view) -> settingPickupLocationViewModel.fabAddPickupOnClick() }"/>
+
+        </FrameLayout>
+
+
+    </LinearLayout>
+
+</layout>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="pickupGoogleMapViewModel"
+            type="com.judamie_manager.viewmodel.fragmentviewmodel.PickupGoogleMapViewModel" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbarGoogleMap"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:titleCentered="true"
+            app:navigationIcon="@drawable/arrow_back_24px"
+            app:onNavigationClickGoogleMap="@{pickupGoogleMapViewModel.pickupGoogleMapFragment}"
+            app:title="@{pickupGoogleMapViewModel.toolbarGoogleMapTitle}"/>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <!-- 구글 맵 Fragment -->
+            <fragment
+                android:id="@+id/mapFragment"
+                android:name="com.google.android.gms.maps.SupportMapFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <!-- 위치 아이콘 -->
+            <ImageView
+                android:id="@+id/btnGetMyLocation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/my_location_24px"
+                android:contentDescription="현재 위치 가져오기"
+                android:layout_margin="10dp"
+                android:layout_gravity="start|bottom" />
+        </FrameLayout>
+    </LinearLayout>
+</layout>

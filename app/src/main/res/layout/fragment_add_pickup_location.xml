@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="addPickupLocationViewModel"
+            type="com.judamie_manager.viewmodel.fragmentviewmodel.AddPickupLocationViewModel" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="10dp"
+        android:transitionGroup="true">
+
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbarMain8"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:titleCentered="true"
+            app:navigationIcon="@drawable/arrow_back_24px"
+            app:onNavigationClickAddPickupLocation="@{addPickupLocationViewModel.addPickupLocationFragment}"/>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textFieldPickupName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="픽업지이름"
+            app:endIconMode="clear_text">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:singleLine="true"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:text="@={addPickupLocationViewModel.textFieldPickupNameText}"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textFieldDolomyeong"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="17dp"
+            android:hint="도로명주소"
+            app:endIconMode="clear_text">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:singleLine="true"
+                android:focusable="false"
+                android:clickable="true"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:text="@={addPickupLocationViewModel.textFieldDolomyeongText}"
+                android:onClick="@{(view) -> addPickupLocationViewModel.textFieldDolomyeongOnClick()}"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textFieldDetailAddress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="17dp"
+            android:hint="상세주소"
+            app:endIconMode="clear_text">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:singleLine="true"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:text="@={addPickupLocationViewModel.textFieldDetailAddressText}"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textFieldPhoneNumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="17dp"
+            android:hint="전화번호"
+            app:endIconMode="clear_text">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="phone"
+                android:singleLine="true"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:text="@={addPickupLocationViewModel.textFieldPhoneNumberText}"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textFieldAdditionalInfo"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_marginTop="17dp"
+            android:hint="추가사항 (선택)"
+            app:endIconMode="clear_text">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:inputType="textMultiLine"
+                android:gravity="top|start"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:text="@={addPickupLocationViewModel.textFieldAdditionalInfoText}" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <android.widget.Button
+            android:id="@+id/buttonRegisterPickup"
+            android:layout_width="match_parent"
+            android:layout_height="42dp"
+            android:layout_marginTop="22dp"
+            android:background="@drawable/pickup_add_button"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textColor="@color/black"
+            android:onClick="@{(view) -> addPickupLocationViewModel.buttonRegisterPickupOnClick()}"/>
+
+    </LinearLayout>
+
+</layout>

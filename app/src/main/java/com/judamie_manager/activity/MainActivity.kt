@@ -1,5 +1,6 @@
 package com.judamie_manager.activity
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -17,5 +18,11 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+        // UserActivity를 실행한다.
+        val userIntent = Intent(this@MainActivity, UserActivity::class.java)
+        startActivity(userIntent)
+        // MainActivity를 종료한다.
+        finish()
     }
 }

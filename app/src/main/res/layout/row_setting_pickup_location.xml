@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <data>
+        <variable
+            name="rowSettingPickupLocationViewModel"
+            type="com.judamie_manager.viewmodel.rowviewmodel.RowSettingPickupLocationViewModel" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/textViewPickupName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:paddingEnd="8dp"
+            android:text="@{rowSettingPickupLocationViewModel.textViewPickupNameText}"
+            android:textSize="16sp" />
+
+        <CheckBox
+            android:id="@+id/checkBoxPickup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:layout_marginTop="7dp"
+            android:checked="@{rowSettingPickupLocationViewModel.checkBoxPickupChecked}" />
+
+    </LinearLayout>
+</layout>

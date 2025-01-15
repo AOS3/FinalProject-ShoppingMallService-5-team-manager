@@ -1,5 +1,14 @@
 <resources>
-    <string name="app_name">manager</string>
+    <string name="app_name">Judamie 관리자</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <!-- 영어, 숫자, 특수문자만 입력을 위한 문자열 -->
+    <string name="digit_value">abcdefghijklmnopqrstuvwxyz0123456789_!@#</string>
+
+    <string-array name="select_category">
+        <item>카테고리</item>
+        <item>제품명</item>
+        <item>판매자</item>
+        <item>구매자</item>
+    </string-array>
 </resources>
