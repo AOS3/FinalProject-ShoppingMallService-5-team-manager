@@ -90,6 +90,8 @@ class PickupGoogleMapFragment : Fragment() {
         settingGoogleMap()
         // 권한 확인을 위한 런처 생성 메서드 호출
         createPermissionCheckLauncher()
+        // 툴바를 구성하는 메서드 호출
+        settingToolbar()
 
         // 권한 확인을 위한 런처 가동
         permissionCheckLauncher.launch(permissionList)
@@ -100,7 +102,7 @@ class PickupGoogleMapFragment : Fragment() {
         }
 
         // 권한 확인 되었으면 다시 업데이트.. (내 위치랑 마커 표시한거 띄울라거,,)
-        onResume()
+        // onResume()
 
         return fragmentPickupGoogleMapBinding.root
     }
@@ -227,7 +229,7 @@ class PickupGoogleMapFragment : Fragment() {
             }
 
             // 현재 위치 측정을 시작한다.
-            getMyLocation()
+            // getMyLocation()
 
             // 주소 리스트의 모든 주소를 처리
             addressList.forEach { address ->
@@ -288,9 +290,7 @@ class PickupGoogleMapFragment : Fragment() {
 
     // 툴바를 구성하는 메서드
     fun settingToolbar() {
-        fragmentPickupGoogleMapBinding.pickupGoogleMapViewModel?.apply {
-            toolbarGoogleMapTitle.value = "픽업지 지도보기"
-        }
+        fragmentPickupGoogleMapBinding.pickupGoogleMapViewModel?.toolbarGoogleMapTitle?.value = "픽업지 지도보기"
     }
 
     // 테스트용 다이얼로그
