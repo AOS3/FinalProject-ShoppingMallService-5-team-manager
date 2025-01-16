@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.MutableLiveData
+import com.google.android.material.snackbar.Snackbar
 import com.judamie_manager.R
 import com.judamie_manager.activity.ServiceActivity
 import com.judamie_manager.util.ServiceFragmentName
@@ -77,6 +78,8 @@ class ProcessingTransactionFragment : Fragment() {
     fun buttonDeposit(){
         // 버튼 클릭하면 판매자에게 입금처리하기(후에 구현)
 
+        // 입금 처리 완료 되면 스낵바 띄우기
+        view?.let { Snackbar.make(it, "입금처리가 완료되었습니다", Snackbar.LENGTH_SHORT).show() }
         // 없애도 됨,,
         serviceActivity.removeFragment(ServiceFragmentName.PROCESSING_TRANSACTION_FRAGMENT)
     }

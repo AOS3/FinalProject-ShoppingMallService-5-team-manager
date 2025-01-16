@@ -60,18 +60,18 @@
                 android:layout_height="match_parent" />
 
             <!-- FloatingActionButton -->
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
+            <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
                 android:id="@+id/fabAddPickup"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_gravity="end|bottom"
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="16dp"
                 android:clickable="true"
-                android:src="@drawable/icon_fab"
-                android:tint="@null"
-                app:backgroundTint="#8000696B"
-                android:onClick="@{(view) -> settingPickupLocationViewModel.fabAddPickupOnClick() }"/>
+                android:onClick="@{(view) -> settingPickupLocationViewModel.fabAddPickupOnClick() }"
+                app:backgroundTint="#009688"
+                app:icon="@drawable/icon_fab"
+                app:iconTint="@color/white" />
 
         </FrameLayout>
 

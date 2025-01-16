@@ -12,6 +12,8 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.appcompat.app.AppCompatActivity
 import com.judamie_manager.R
+import com.judamie_manager.activity.ServiceActivity
+import com.judamie_manager.util.ServiceFragmentName
 
 class DaumApiFragment : Fragment() {
 

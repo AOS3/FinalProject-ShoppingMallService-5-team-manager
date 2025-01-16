@@ -43,24 +43,15 @@ class SettingPickupLocationFragment : Fragment() {
 
         serviceActivity = activity as ServiceActivity
 
+        // checkBoxStates 초기화
+        checkBoxStates.value = MutableList(tempList.size) { false }
+
         // 툴바를 구성하는 메서드 호출
         settingToolbar()
         // 리사이클러뷰 구성 메서드 호출
         settingRecyclerView()
 
-        // 체크박스 상태 초기화
-        checkBoxStates.value = MutableList(tempList.size) { false }
-
         return fragmentSettingPickupLocationBinding.root
-    }
-
-    // 전체 선택 시 모든 체크박스를 업데이트하는 메서드
-    fun updateAllCheckBoxes(isChecked: Boolean) {
-        // checkBoxStates를 업데이트
-        checkBoxStates.value = MutableList(tempList.size) { isChecked }
-
-        // 어댑터에 데이터 변경 알림
-        (fragmentSettingPickupLocationBinding.recyclerViewPickupLocation.adapter as RecyclerViewAdapter).notifyDataSetChanged()
     }
 
     // 리사이클러뷰 구성 메서드
@@ -76,12 +67,21 @@ class SettingPickupLocationFragment : Fragment() {
     }
 
     // 메인 RecyclerView의 어뎁터
-    inner class RecyclerViewAdapter : RecyclerView.Adapter<RecyclerViewAdapter.MainViewHolder>(){
-        inner class MainViewHolder(val rowSettingPickupLocationBinding: RowSettingPickupLocationBinding) : RecyclerView.ViewHolder(rowSettingPickupLocationBinding.root)
+    inner class RecyclerViewAdapter : RecyclerView.Adapter<RecyclerViewAdapter.MainViewHolder>() {
+
+        inner class MainViewHolder(val rowSettingPickupLocationBinding: RowSettingPickupLocationBinding) :
+            RecyclerView.ViewHolder(rowSettingPickupLocationBinding.root)
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainViewHolder {
-            val rowSettingPickupLocationBinding = DataBindingUtil.inflate<RowSettingPickupLocationBinding>(layoutInflater, R.layout.row_setting_pickup_location, parent, false)
-            rowSettingPickupLocationBinding.rowSettingPickupLocationViewModel = RowSettingPickupLocationViewModel(this@SettingPickupLocationFragment)
+            val rowSettingPickupLocationBinding =
+                DataBindingUtil.inflate<RowSettingPickupLocationBinding>(
+                    layoutInflater,
+                    R.layout.row_setting_pickup_location,
+                    parent,
+                    false
+                )
+            rowSettingPickupLocationBinding.rowSettingPickupLocationViewModel =
+                RowSettingPickupLocationViewModel(this@SettingPickupLocationFragment)
             rowSettingPickupLocationBinding.lifecycleOwner = this@SettingPickupLocationFragment
 
             val mainViewHolder = MainViewHolder(rowSettingPickupLocationBinding)
@@ -94,8 +94,19 @@ class SettingPickupLocationFragment : Fragment() {
         }
 
         override fun onBindViewHolder(holder: MainViewHolder, position: Int) {
-            holder.rowSettingPickupLocationBinding.rowSettingPickupLocationViewModel?.textViewPickupNameText?.value = tempList[position]
-            holder.rowSettingPickupLocationBinding.rowSettingPickupLocationViewModel?.checkBoxPickupChecked?.value = false
+            val rowViewModel = holder.rowSettingPickupLocationBinding.rowSettingPickupLocationViewModel!!
+            rowViewModel.textViewPickupNameText.value = tempList[position]
+
+            // 체크박스 상태 바인딩
+            val isChecked = checkBoxStates.value?.get(position) ?: false
+            rowViewModel.checkBoxPickupChecked.value = isChecked
+
+            holder.rowSettingPickupLocationBinding.checkBoxPickup.setOnCheckedChangeListener { _, newState ->
+                checkBoxStates.value?.let {
+                    it[position] = newState
+                    checkBoxStates.value = it
+                }
+            }
         }
     }
 
@@ -129,7 +140,43 @@ class SettingPickupLocationFragment : Fragment() {
 
     // 선택 삭제 버튼 메서드
     fun selectionDelete() {
+        // 체크된 항목만 필터링하여 삭제
+        val updatedList = mutableListOf<String>()
+        val updatedStates = mutableListOf<Boolean>()
 
+        // tempList와 checkBoxStates를 순회하면서, 체크된 항목만 새로운 리스트에 추가
+        for (i in tempList.indices) {
+            if (checkBoxStates.value?.get(i) == true) {
+                // 체크된 항목은 삭제하지 않음 (스킵)
+            } else {
+                // 체크되지 않은 항목만 새로운 리스트에 추가
+                updatedList.add(tempList[i])
+                updatedStates.add(false) // 새로운 리스트의 체크박스 상태는 모두 'false'
+            }
+        }
+
+        // 변경된 리스트와 체크박스 상태 반영
+        tempList = updatedList.toTypedArray()
+        checkBoxStates.value = updatedStates
+
+        // RecyclerView 어댑터에 데이터 변경을 알리기
+        fragmentSettingPickupLocationBinding.recyclerViewPickupLocation.adapter?.notifyDataSetChanged()
+    }
+
+
+    // 전체 선택 시 모든 체크박스를 업데이트하는 메서드
+    fun updateAllCheckBoxes(isChecked: Boolean) {
+        // 전체 선택 상태에 맞게 모든 체크박스 상태를 갱신
+        val updatedStates = MutableList(tempList.size) { isChecked }
+
+        // checkBoxStates의 상태를 업데이트
+        checkBoxStates.value = updatedStates
+
+        // 전체 선택 상태를 반영하기 위해 ViewModel에서 관리하는 checkBoxPickupAllChecked 상태 업데이트
+        (fragmentSettingPickupLocationBinding.settingPickupLocationViewModel?.checkBoxPickupAllChecked)?.value = isChecked
+
+        // RecyclerView 어댑터에 데이터 변경을 알리기
+        fragmentSettingPickupLocationBinding.recyclerViewPickupLocation.adapter?.notifyDataSetChanged()
     }
 
 }

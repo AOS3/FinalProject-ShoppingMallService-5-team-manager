@@ -23,16 +23,13 @@ class SettingPickupLocationViewModel(val settingPickupLocationFragment : Setting
     val checkBoxPickupAllChecked = MutableLiveData(false)
 
     // checkBoxPickupAll - onClick
-    fun checkBoxPickupAllOnClick(){
-        if (checkBoxPickupAllChecked.value == true){
-            val isChecked = true
-            settingPickupLocationFragment.updateAllCheckBoxes(isChecked)
-        }
-        else {
-            val isChecked = false
-            settingPickupLocationFragment.updateAllCheckBoxes(isChecked)
-        }
+    fun checkBoxPickupAllOnClick() {
+        // 전체 선택 상태에 맞게 처리
+        val isChecked = checkBoxPickupAllChecked.value != true  // 현재 상태와 반대 값으로 설정
+        checkBoxPickupAllChecked.value = isChecked  // 상태 갱신
+        settingPickupLocationFragment.updateAllCheckBoxes(isChecked)  // 상태 업데이트 메서드 호출
     }
+
 
     companion object{
         // toolbar7 - onNavigationClickSettingPickupLocation

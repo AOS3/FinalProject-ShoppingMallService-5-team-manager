@@ -1,5 +1,6 @@
 package com.judamie_manager.viewmodel.fragmentviewmodel
 
+import android.app.Application
 import androidx.databinding.BindingAdapter
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -19,6 +20,16 @@ class AddPickupLocationViewModel (val addPickupLocationFragment : AddPickupLocat
     val textFieldPhoneNumberText = MutableLiveData("")
     // textFieldAdditionalInfo - text
     val textFieldAdditionalInfoText = MutableLiveData("")
+
+
+    // 데이터 초기화 메서드
+    fun resetData() {
+        textFieldPickupNameText.value = ""
+        textFieldDolomyeongText.value = ""
+        textFieldDetailAddressText.value = ""
+        textFieldPhoneNumberText.value = ""
+        textFieldAdditionalInfoText.value = ""
+    }
 
     // buttonRegisterPickup - onClick
     fun buttonRegisterPickupOnClick(){
@@ -40,4 +51,5 @@ class AddPickupLocationViewModel (val addPickupLocationFragment : AddPickupLocat
             }
         }
     }
+
 }
