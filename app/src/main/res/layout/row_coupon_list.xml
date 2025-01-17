@@ -23,7 +23,7 @@
             android:maxLines="1"
             android:paddingEnd="8dp"
             android:text="@{rowCouponListViewModel.textViewCouponNameText}"
-            android:textSize="16sp" />
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/textViewCouponDate"
@@ -36,7 +36,7 @@
             android:paddingEnd="8dp"
             android:text="@{rowCouponListViewModel.textViewCouponDateText}"
             android:textColor="#85000000"
-            android:textSize="16sp" />
+            android:textSize="20sp" />
 
     </LinearLayout>
 </layout>
