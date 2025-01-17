@@ -34,15 +34,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 
-            <!-- 위치 아이콘 -->
-            <ImageView
-                android:id="@+id/btnGetMyLocation"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/my_location_24px"
-                android:contentDescription="현재 위치 가져오기"
-                android:layout_margin="10dp"
-                android:layout_gravity="start|bottom" />
         </FrameLayout>
     </LinearLayout>
 </layout>

@@ -61,6 +61,9 @@ class PickupGoogleMapFragment : Fragment() {
     // 구글 지도 객체를 담을 변수를 선언한다.
     lateinit var mainGoogleMap: GoogleMap
 
+    // 다이얼로그 열렸나 닫혔나 확인하는 변수
+    private var isDialogOpen = false
+
     // 임시 픽업지 주소 리스트
     val addressList = listOf(
         "서울특별시 종로구 세종대로 175",
@@ -96,13 +99,11 @@ class PickupGoogleMapFragment : Fragment() {
         // 권한 확인을 위한 런처 가동
         permissionCheckLauncher.launch(permissionList)
 
-        // 위치 아이콘 클릭 이벤트 처리 (내 위치로,,,)
-        fragmentPickupGoogleMapBinding.root.findViewById<ImageView>(R.id.btnGetMyLocation).setOnClickListener {
-            getMyLocation()
-        }
+//        // 위치 아이콘 클릭 이벤트 처리 (내 위치로,,,)
+//        fragmentPickupGoogleMapBinding.root.findViewById<ImageView>(R.id.btnGetMyLocation).setOnClickListener {
+//            getMyLocation()
+//        }
 
-        // 권한 확인 되었으면 다시 업데이트.. (내 위치랑 마커 표시한거 띄울라거,,)
-        // onResume()
 
         return fragmentPickupGoogleMapBinding.root
     }
@@ -127,6 +128,11 @@ class PickupGoogleMapFragment : Fragment() {
     // 다시 화면을 업데이트하는 메서드
     override fun onResume() {
         super.onResume()
+
+        // 다이얼로그가 열려 있으면 위치 갱신을 막음
+        if (isDialogOpen) {
+            return
+        }
 
         // 권한이 승인되었으면 지도와 위치 정보를 다시 갱신
         if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
@@ -291,10 +297,24 @@ class PickupGoogleMapFragment : Fragment() {
     // 툴바를 구성하는 메서드
     fun settingToolbar() {
         fragmentPickupGoogleMapBinding.pickupGoogleMapViewModel?.toolbarGoogleMapTitle?.value = "픽업지 지도보기"
+        fragmentPickupGoogleMapBinding.toolbarGoogleMap.inflateMenu(R.menu.menu_pickup_google_map_toolbar)
+        fragmentPickupGoogleMapBinding.toolbarGoogleMap.setOnMenuItemClickListener {
+            when(it.itemId){
+                R.id.btnGetMyLocation ->{
+                    // 내 위치로
+                    getMyLocation()
+                }
+            }
+            true
+        }
     }
 
     // 테스트용 다이얼로그
     fun onMarkerClick(marker: Marker) {
+
+        // 다이얼로그가 열리면 위치 갱신을 막음
+        isDialogOpen = true
+
         // 나중에... 위치 같은거... 픽업지 정보 띄워주기
         val position = marker.position
         val latitude = position.latitude
@@ -303,5 +323,6 @@ class PickupGoogleMapFragment : Fragment() {
         val dialog = ConfirmDialogFragment("CU입니다", "하하하\n안녕하세요", "01012345678")
         dialog.isCancelable = false
         activity?.let { dialog.show(it.supportFragmentManager, "ConfirmDialog") }
+
     }
 }
