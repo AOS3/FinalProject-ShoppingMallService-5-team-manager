@@ -184,7 +184,7 @@ class CompletedTransactionsListFragment : Fragment() {
         }
     }
 
-    // SearchView 셋팅 메서드
+    // SearchView 세팅 메서드
     fun settingSearchView(){
         fragmentCompletedTransactionsListBinding.apply {
             // SerachView의 입력 창에 대한 엔터키 이벤트
