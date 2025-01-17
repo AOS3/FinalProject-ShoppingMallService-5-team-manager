@@ -26,6 +26,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
+            android:layout_marginBottom="3dp"
             app:boxStrokeColor="#2E948A"
             app:endIconMode="dropdown_menu">
 
@@ -33,7 +34,7 @@
                 android:id="@+id/autoCompleteTextView"
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
+                android:layout_marginStart="22dp"
                 android:contentDescription="검색할 키워드를 선택할 수 있는 드롭다운 메뉴"
                 android:inputType="none"
                 android:text="검색할 키워드 선택"
@@ -45,27 +46,37 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <!-- SearchBar -->
+
             <com.google.android.material.search.SearchBar
                 android:id="@+id/searchBarTransactionList"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="검색어를 입력해주세요" />
 
-            <!-- RecyclerView for main list -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerviewCompletedTransactionList"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="90dp" />
 
-            <!-- SearchView -->
+
             <com.google.android.material.search.SearchView
                 android:id="@+id/searchViewTransactionList"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:hint="검색어를 입력해주세요"
                 app:layout_anchor="@id/searchBarTransactionList">
+
+                <TextView
+                    android:id="@+id/textViewNoResults"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="검색 결과가 없습니다"
+                    android:gravity="center"
+                    android:textColor="@android:color/darker_gray"
+                    android:textSize="16sp"
+                    android:layout_marginTop="16dp"
+                    android:visibility="gone"/>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recyclerviewCompletedTransactionListSearch"

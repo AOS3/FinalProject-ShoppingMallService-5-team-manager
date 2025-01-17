@@ -228,6 +228,12 @@ class CompletedTransactionsListFragment : Fragment() {
     fun refreshSearchRecyclerView() {
         recyclerViewSearchList.clear()
         recyclerViewSearchList.addAll(tempList.filter { it.contains(searchKeyword, ignoreCase = true) })
+        // 결과가 없으면 "결과가 없습니다" 메시지를 보이고, 결과가 있으면 메시지를 숨긴다
+        if (recyclerViewSearchList.isEmpty()) {
+            fragmentCompletedTransactionsListBinding.textViewNoResults.visibility = View.VISIBLE
+        } else {
+            fragmentCompletedTransactionsListBinding.textViewNoResults.visibility = View.GONE
+        }
         // 검색 결과에 맞는 RecyclerView의 어댑터를 갱신
         fragmentCompletedTransactionsListBinding.recyclerviewCompletedTransactionListSearch.adapter?.notifyDataSetChanged()
     }

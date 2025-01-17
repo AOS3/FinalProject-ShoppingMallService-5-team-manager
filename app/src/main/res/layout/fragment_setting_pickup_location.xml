@@ -42,9 +42,11 @@
                 style="@style/Widget.Material3.Button.IconButton.Outlined"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="15dp"
+                android:layout_marginEnd="10dp"
                 android:text="    선택 삭제    "
                 android:textColor="@color/black"
+                android:paddingStart="6dp"
+                android:paddingEnd="5dp"
                 android:onClick="@{(view) -> settingPickupLocationViewModel.buttonSelectionDeleteOnClick()}" />
         </LinearLayout>
 

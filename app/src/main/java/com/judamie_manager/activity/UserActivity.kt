@@ -1,7 +1,12 @@
 package com.judamie_manager.activity
 
+import android.graphics.Rect
 import android.os.Bundle
+import android.os.SystemClock
 import android.text.TextUtils.replace
+import android.view.MotionEvent
+import android.view.View
+import android.view.inputmethod.InputMethodManager
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -15,6 +20,7 @@ import com.judamie_manager.R
 import com.judamie_manager.databinding.ActivityUserBinding
 import com.judamie_manager.ui.fragment.LoginFragment
 import com.judamie_manager.util.UserFragmentName
+import kotlin.concurrent.thread
 
 class UserActivity : AppCompatActivity() {
 
@@ -80,6 +86,47 @@ class UserActivity : AppCompatActivity() {
         }
     }
 
+    // 키보드 올리는 메서드
+    fun showSoftInput(view: View){
+        // 입력을 관리하는 매니저
+        val inputManager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+        // 포커스를 준다.
+        view.requestFocus()
+
+        thread {
+            SystemClock.sleep(500)
+            // 키보드를 올린다.
+            inputManager.showSoftInput(view, 0)
+        }
+    }
+    // 키보드를 내리는 메서드
+    fun hideSoftInput(){
+        // 포커스가 있는 뷰가 있다면
+        if(currentFocus != null){
+            // 입력을 관리하는 매니저
+            val inputManager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+            // 키보드를 내린다.
+            inputManager.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
+            // 포커스를 해제한다.
+            currentFocus?.clearFocus()
+        }
+    }
+
+    // Activity에서 터치가 발생하면 호출되는 메서드
+    override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
+        // 만약 포커스가 주어진 View가 있다면
+        if(currentFocus != null){
+            // 현재 포커스가 주어진 View의 화면상의 영역 정보를 가져온다.
+            val rect = Rect()
+            currentFocus?.getGlobalVisibleRect(rect)
+            // 현재 터치 지점이 포커스를 가지고 있는 View의 영역 내부가 아니라면
+            if(rect.contains(ev?.x?.toInt()!!, ev?.y?.toInt()!!) == false){
+                // 키보드를 내리고 포커스를 제거한다.
+                hideSoftInput()
+            }
+        }
+        return super.dispatchTouchEvent(ev)
+    }
 
     // 프래그먼트를 BackStack에서 제거하는 메서드
     fun removeFragment(fragmentName: UserFragmentName){

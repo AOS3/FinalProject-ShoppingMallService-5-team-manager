@@ -2,11 +2,13 @@ package com.judamie_manager.ui.fragment
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import com.google.android.material.textfield.TextInputLayout
 import com.judamie_manager.R
 import com.judamie_manager.activity.ServiceActivity
 import com.judamie_manager.activity.UserActivity
@@ -40,13 +42,19 @@ class LoginFragment : Fragment() {
             // 아이디 입력 여부 확인
             if (loginViewModel?.textFieldUserLoginIdEditTextText?.value?.isEmpty()!!) {
                 textFieldUserLoginId.error = "아이디를 입력해주세요."
+                userActivity.showSoftInput(textFieldUserLoginId.editText!!)
+                // 1초 뒤에 에러 메시지 제거
+                clearErrorAfterDelay(textFieldUserLoginId, 2000)
             } else {
                 textFieldUserLoginId.error = null
             }
-
             // 비밀번호 입력 여부 확인
             if (loginViewModel?.textFieldUserLoginPwEditTextText?.value?.isEmpty()!!) {
                 textFieldUserLoginPw.error = "비밀번호를 입력해주세요."
+                textFieldUserLoginPw.requestFocus()
+                userActivity.showSoftInput(textFieldUserLoginPw.editText!!)
+                // 1초 뒤에 에러 메시지 제거
+                clearErrorAfterDelay(textFieldUserLoginPw, 2000)
             } else {
                 textFieldUserLoginPw.error = null
             }
@@ -66,8 +74,19 @@ class LoginFragment : Fragment() {
                     loginViewModel?.textFieldUserLoginPwEditTextText?.value = ""
                     textFieldUserLoginId.error = "아이디 혹은 비밀번호가 잘못되었습니다."
                     textFieldUserLoginPw.error = "아이디 혹은 비밀번호가 잘못되었습니다."
+
+                    // 1초 후에 에러 메시지 제거
+                    clearErrorAfterDelay(textFieldUserLoginId, 1000)
+                    clearErrorAfterDelay(textFieldUserLoginPw, 1000)
                 }
             }
         }
+    }
+
+    // 에러 메시지 제거 메서드
+    fun clearErrorAfterDelay(textField: TextInputLayout, delayMillis: Long) {
+        Handler().postDelayed({
+            textField.error = null
+        }, delayMillis)
     }
 }

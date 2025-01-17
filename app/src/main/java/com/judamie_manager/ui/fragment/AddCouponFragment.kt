@@ -1,5 +1,8 @@
 package com.judamie_manager.ui.fragment
 
+import android.icu.text.SimpleDateFormat
+import android.icu.util.Calendar
+import android.net.ParseException
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -18,6 +21,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import java.util.Locale
 
 class AddCouponFragment : Fragment() {
 
@@ -81,9 +85,11 @@ class AddCouponFragment : Fragment() {
 
             var isValid = true
 
+            // 쿠폰명 체크
             if (couponName.isEmpty()) {
                 textFieldCouponName.error = "쿠폰명을 입력해주세요."
-                textFieldCouponName.editText?.requestFocus()
+                // textFieldCouponName.editText?.requestFocus()
+                serviceActivity.showSoftInput(textFieldCouponName.editText!!)
                 isValid = false
             } else {
                 textFieldCouponName.error = null
@@ -92,19 +98,47 @@ class AddCouponFragment : Fragment() {
             // 쿠폰 할인율 체크
             if (couponSale.isEmpty()) {
                 textFieldCouponSale.error = "할인율을 입력해주세요."
-                textFieldCouponSale.editText?.requestFocus()
+                // textFieldCouponSale.editText?.requestFocus()
+                serviceActivity.showSoftInput(textFieldCouponSale.editText!!)
                 isValid = false
             } else {
-                textFieldCouponSale.error = null
+                val sale = couponSale.toIntOrNull()
+                if (sale == null || sale < 0 || sale > 100) {
+                    textFieldCouponSale.error = "0에서 100 사이의 숫자를 입력해주세요."
+                    serviceActivity.showSoftInput(textFieldCouponSale.editText!!)
+                    isValid = false
+                } else {
+                    textFieldCouponSale.error = null
+                }
             }
 
             // 쿠폰 사용 기한 체크
             if (couponDate.isEmpty()) {
                 textFieldCouponDate.error = "사용기한을 입력해주세요."
-                textFieldCouponDate.editText?.requestFocus()
+                // textFieldCouponDate.editText?.requestFocus()
                 isValid = false
             } else {
-                textFieldCouponDate.error = null
+                try {
+                    val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+                    val selectedDate = dateFormat.parse(couponDate)
+
+                    val currentDate = Calendar.getInstance().apply {
+                        set(Calendar.HOUR_OF_DAY, 0)
+                        set(Calendar.MINUTE, 0)
+                        set(Calendar.SECOND, 0)
+                        set(Calendar.MILLISECOND, 0)
+                    }.time
+
+                    if (selectedDate != null && selectedDate.before(currentDate)) {
+                        textFieldCouponDate.error = "사용기한은 오늘 이후 날짜여야 합니다."
+                        isValid = false
+                    } else {
+                        textFieldCouponDate.error = null
+                    }
+                } catch (e: ParseException) {
+                    textFieldCouponDate.error = "날짜 형식이 잘못되었습니다. (yyyy-MM-dd)"
+                    isValid = false
+                }
             }
 
             // 모두 입력했을 시 쿠폰 등록하고(나중에 수정,,,) 쿠폰 목록 화면으로 이동
