@@ -41,25 +41,39 @@
                 android:paddingStart="8dp" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <SearchView
-            android:id="@+id/searchViewTransactionList"
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="15dp"
-            android:layout_marginEnd="16dp"
-            app:iconifiedByDefault="false"
-            android:background="@drawable/search_bar_background"
-            android:queryHint="검색어를 입력해보세요" />
+            android:layout_height="match_parent">
 
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="30dp" />
+            <!-- SearchBar -->
+            <com.google.android.material.search.SearchBar
+                android:id="@+id/searchBarTransactionList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="검색어를 입력해주세요" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/recyclerviewCompletedTransactionList"/>
+            <!-- RecyclerView for main list -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerviewCompletedTransactionList"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="90dp" />
+
+            <!-- SearchView -->
+            <com.google.android.material.search.SearchView
+                android:id="@+id/searchViewTransactionList"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="검색어를 입력해주세요"
+                app:layout_anchor="@id/searchBarTransactionList">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerviewCompletedTransactionListSearch"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </com.google.android.material.search.SearchView>
+
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
     </LinearLayout>
 

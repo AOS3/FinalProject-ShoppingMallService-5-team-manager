@@ -46,6 +46,12 @@ class CompletedTransactionsListFragment : Fragment() {
     // 검색어를 담을 변수
     var searchKeyword = ""
 
+    // 드롭다운 메뉴 초기화 (온클릭 눌러서 갔다가 돌아와도 실행되도록,,,)
+    override fun onResume() {
+        super.onResume()
+        dropMenuAdapter()
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         fragmentCompletedTransactionsListBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_completed_transactions_list, container, false)
@@ -56,8 +62,6 @@ class CompletedTransactionsListFragment : Fragment() {
 
         // 툴바를 구성하는 메서드 호출
         settingToolbar()
-        // 드롭다운 메뉴 연결 메서드 호출
-        dropMenuAdapter()
         // 리사이클러뷰 구성 메서드 호출
         settingRecyclerView()
         // search view 설정 메서드
@@ -65,11 +69,16 @@ class CompletedTransactionsListFragment : Fragment() {
 
 
         // 검색 리사이클러뷰 구성 메서드 호출
-        // settingRecyclerViewSearch()
+        settingRecyclerViewSearch()
         // SearchView 셋팅 메서드 호출
-        // settingSearchView()
+        settingSearchView()
         // 메인 RecyclerView를 갱신하는 메서드
-        // refreshMainRecyclerView()
+        refreshMainRecyclerView()
+
+        // 만약 검색화면이 보여지고 있는 상태라면..
+        if(isShownSearchView == true){
+            refreshSearchRecyclerView()
+        }
 
         return fragmentCompletedTransactionsListBinding.root
 
@@ -135,37 +144,15 @@ class CompletedTransactionsListFragment : Fragment() {
         fragmentCompletedTransactionsListBinding.autoCompleteTextView.setAdapter(arrayAdapter)
     }
 
-//    // search view 설정 메서드
-//    private fun initSearchView() {
-//        // init SearchView
-//        // isSubmitButtonEnabled = True : SearchView 안에 검색 버튼을 삭제
-//        fragmentCompletedTransactionsListBinding.searchViewTransactionList.isSubmitButtonEnabled = true
-//        // setOnQueryTextListener : 검색창에서 일어나는 event listener를 구현할 수 있음
-//        fragmentCompletedTransactionsListBinding.searchViewTransactionList.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-//            // onQueryTextSubmit : 검색을 완료하였을 경우 (키보드에 있는 '검색' 돋보기 버튼을 선택하였을 경우)
-//            // return False : 검색 키보드를 내림
-//            override fun onQueryTextSubmit(query: String?): Boolean {
-//                // @TODO
-//                return false
-//            }
-//
-//            // onQueryTextChange : 검색어를 변경할 때마다 실행됨
-//            override fun onQueryTextChange(newText: String?): Boolean {
-//                // @TODO
-//                return true
-//            }
-//        })
-//    }
-
     // 검색 리사이클러뷰 구성 메서드
     fun settingRecyclerViewSearch() {
         fragmentCompletedTransactionsListBinding.apply {
             // RecyclerView에 어댑터를 설정한다.
-            recyclerviewCompletedTransactionList.adapter = SearchRecyclerViewAdapter()
+            recyclerviewCompletedTransactionListSearch.adapter = SearchRecyclerViewAdapter()
             // 한줄에 하나씩 배치한다
-            recyclerviewCompletedTransactionList.layoutManager = LinearLayoutManager(serviceActivity)
+            recyclerviewCompletedTransactionListSearch.layoutManager = LinearLayoutManager(serviceActivity)
             val deco = MaterialDividerItemDecoration(serviceActivity, MaterialDividerItemDecoration.VERTICAL)
-            recyclerviewCompletedTransactionList.addItemDecoration(deco)
+            recyclerviewCompletedTransactionListSearch.addItemDecoration(deco)
         }
     }
 
@@ -182,7 +169,6 @@ class CompletedTransactionsListFragment : Fragment() {
 
             // 리사이클러뷰 항목 클릭시 상세 거래 완료 내역 보기 화면으로 이동
             rowCompletedTransactionsListBinding.root.setOnClickListener {
-
                 serviceActivity.replaceFragment(ServiceFragmentName.SHOW_ONE_COMPLETED_TRANSACTION_DETAIL_FRAGMENT, true, true, null)
             }
 
@@ -198,39 +184,42 @@ class CompletedTransactionsListFragment : Fragment() {
         }
     }
 
-
-    fun settingSearchView() {
+    // SearchView 셋팅 메서드
+    fun settingSearchView(){
         fragmentCompletedTransactionsListBinding.apply {
-            // SearchView에 대한 QueryTextListener 설정
-            searchViewTransactionList.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-                override fun onQueryTextSubmit(query: String?): Boolean {
-                    // 사용자가 입력한 검색어를 변수에 저장
-                    searchKeyword = query.orEmpty()
-                    // 검색 결과를 갱신
-                    refreshSearchRecyclerView()
-                    return true
-                }
-
-                override fun onQueryTextChange(newText: String?): Boolean {
-                    // 사용자가 입력 중인 검색어를 변수에 저장
-                    searchKeyword = newText.orEmpty()
-                    // 검색 결과를 실시간으로 갱신
-                    refreshSearchRecyclerView()
-                    return true
-                }
-            })
-
-            // SearchView의 닫기 버튼 리스너 설정
-            searchViewTransactionList.setOnCloseListener {
-                // SearchView가 닫힐 때 처리
-                isShownSearchView = false
+            // SerachView의 입력 창에 대한 엔터키 이벤트
+            searchViewTransactionList.editText.setOnEditorActionListener { v, actionId, event ->
+                // 사용자가 입력한 검색어를 가져와 변수에 담아둔다.
+                searchKeyword = searchViewTransactionList.editText.text.toString()
+                // 검색 결과를 가져와 RecyclerView를 갱신하는 메서드를 호출한다.
+                refreshSearchRecyclerView()
                 true
             }
 
-            // SearchView의 열기 버튼 리스너 설정
-            searchViewTransactionList.setOnSearchClickListener {
-                // SearchView가 열릴 때 처리
-                isShownSearchView = true
+            // SearchView 노출에 대한 이벤트
+            searchViewTransactionList.addTransitionListener { searchView, previousState, newState ->
+
+                when(newState){
+                    // 보이기 전
+                    com.google.android.material.search.SearchView.TransitionState.SHOWING -> {
+                        isShownSearchView = true
+                        recyclerViewSearchList.clear()
+                    }
+                    // 보이고난 후
+                    com.google.android.material.search.SearchView.TransitionState.SHOWN -> {
+
+                    }
+                    // 사라지기 전
+                    com.google.android.material.search.SearchView.TransitionState.HIDING -> {
+
+                    }
+                    // 사라지고 난 후
+                    com.google.android.material.search.SearchView.TransitionState.HIDDEN -> {
+                        isShownSearchView = false
+                        recyclerViewSearchList.clear()
+                        recyclerviewCompletedTransactionListSearch.adapter?.notifyDataSetChanged()
+                    }
+                }
             }
         }
     }
@@ -239,8 +228,10 @@ class CompletedTransactionsListFragment : Fragment() {
     fun refreshSearchRecyclerView() {
         recyclerViewSearchList.clear()
         recyclerViewSearchList.addAll(tempList.filter { it.contains(searchKeyword, ignoreCase = true) })
-        fragmentCompletedTransactionsListBinding.recyclerviewCompletedTransactionList.adapter?.notifyDataSetChanged()
+        // 검색 결과에 맞는 RecyclerView의 어댑터를 갱신
+        fragmentCompletedTransactionsListBinding.recyclerviewCompletedTransactionListSearch.adapter?.notifyDataSetChanged()
     }
+
 
     // 메인 RecyclerView를 갱신하는 메서드
     fun refreshMainRecyclerView() {
