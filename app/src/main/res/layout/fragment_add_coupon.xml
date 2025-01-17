@@ -19,11 +19,11 @@
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbarMain2"
-            app:titleCentered="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:navigationIcon="@drawable/arrow_back_24px"
-            app:onNavigationClickAddCoupon="@{addCouponViewModel.addCouponFragment}"/>
+            app:onNavigationClickAddCoupon="@{addCouponViewModel.addCouponFragment}"
+            app:titleCentered="true" />
 
         <LinearLayout
                 android:layout_width="match_parent"

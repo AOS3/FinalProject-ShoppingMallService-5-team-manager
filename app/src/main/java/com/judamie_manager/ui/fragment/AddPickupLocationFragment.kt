@@ -26,6 +26,8 @@ class AddPickupLocationFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
+        if(::fragmentAddPickupLocationBinding.isInitialized == false){
+
 
         fragmentAddPickupLocationBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_add_pickup_location, container, false)
         addPickupLocationViewModel = AddPickupLocationViewModel(this@AddPickupLocationFragment)
@@ -35,52 +37,44 @@ class AddPickupLocationFragment : Fragment() {
         fragmentAddPickupLocationBinding.lifecycleOwner = viewLifecycleOwner
 
 
+        }
+
+        // FragmentResultListener 설정 (주소 결과를 받음)
+        parentFragmentManager.setFragmentResultListener("addressRequest", viewLifecycleOwner
+        ) { _, result ->
+            val addressData = result.getString("address")
+            addPickupLocationViewModel.textFieldDolomyeongText.value = addressData
+            fragmentAddPickupLocationBinding.textFieldDolomyeong.editText?.setText(addressData)
+        }
+
+
         serviceActivity = activity as ServiceActivity
 
         // 툴바를 구성하는 메서드 호출
         settingToolbar()
 
-        // FragmentResultListener 설정 (주소 결과를 받음)
-        parentFragmentManager.setFragmentResultListener("addressRequest", viewLifecycleOwner) { _, result ->
-            val addressData = result.getString("address")
-            addPickupLocationViewModel.textFieldDolomyeongText.value = addressData
-            // fragmentAddPickupLocationBinding.textFieldDolomyeong.editText?.setText(addressData)
-        }
-
-        // 상태 복원
-        if (savedInstanceState != null) {
-            restoreState(savedInstanceState)  // savedInstanceState를 이용한 상태 복원
-        }
-
         return fragmentAddPickupLocationBinding.root
     }
 
-    // 상태 저장
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-
-        // 상태 저장
-        saveToBundle(outState)  // outState에 데이터를 저장
-        Log.d("AddPickupLocationFragment", "onSaveInstanceState: 상태 저장 완료")
+        outState.putString("pickupName", addPickupLocationViewModel.textFieldPickupNameText.value)
+        // outState.putString("dolomyeongAddress", addPickupLocationViewModel.textFieldDolomyeongText.value)
+        outState.putString("detailAddress", addPickupLocationViewModel.textFieldDetailAddressText.value)
+        outState.putString("phoneNumber", addPickupLocationViewModel.textFieldPhoneNumberText.value)
+        outState.putString("addInfo", addPickupLocationViewModel.textFieldAdditionalInfoText.value)
     }
 
-    // 상태 복원
-    private fun restoreState(bundle: Bundle?) {
-        val state = bundle ?: return
-        addPickupLocationViewModel.textFieldPickupNameText.value = state.getString("pickupName", "")
-        addPickupLocationViewModel.textFieldDolomyeongText.value = state.getString("dolomyeongAddress", "")
-        addPickupLocationViewModel.textFieldDetailAddressText.value = state.getString("detailAddress", "")
-        addPickupLocationViewModel.textFieldPhoneNumberText.value = state.getString("phoneNumber", "")
-        Log.d("AddPickupLocationFragment", "restoreState: 상태 복원 완료")
-    }
 
-    // 상태 저장
-    private fun saveToBundle(bundle: Bundle) {
-        bundle.putString("pickupName", addPickupLocationViewModel.textFieldPickupNameText.value)
-        bundle.putString("dolomyeongAddress", addPickupLocationViewModel.textFieldDolomyeongText.value)
-        bundle.putString("detailAddress", addPickupLocationViewModel.textFieldDetailAddressText.value)
-        bundle.putString("phoneNumber", addPickupLocationViewModel.textFieldPhoneNumberText.value)
-        Log.d("AddPickupLocationFragment", "saveToBundle: 데이터 저장 완료")
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        savedInstanceState?.let {
+            addPickupLocationViewModel.textFieldPickupNameText.value = it.getString("pickupName")
+            // addPickupLocationViewModel.textFieldDolomyeongText.value = it.getString("dolomyeongAddress")
+            addPickupLocationViewModel.textFieldDetailAddressText.value = it.getString("detailAddress")
+            addPickupLocationViewModel.textFieldPhoneNumberText.value = it.getString("phoneNumber")
+            addPickupLocationViewModel.textFieldAdditionalInfoText.value = it.getString("addInfo")
+        }
     }
 
     // 이전 화면으로 돌아가는 메서드

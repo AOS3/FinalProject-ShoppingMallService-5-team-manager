@@ -37,36 +37,44 @@
                 style="@style/Widget.Material3.Button.IconButton.Outlined"
                 android:layout_width="match_parent"
                 android:layout_height="80dp"
+                android:layout_marginBottom="20dp"
+                android:onClick="@{(view) -> mainViewModel.buttonMainPickupOnClick()}"
                 android:text="픽업지 관리"
-                android:textColor="@color/black"
-                android:onClick="@{(view) -> mainViewModel.buttonMainPickupOnClick()}"/>
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textColor="@color/black" />
 
             <Button
                 android:id="@+id/button2"
                 style="@style/Widget.Material3.Button.IconButton.Outlined"
                 android:layout_width="match_parent"
                 android:layout_height="80dp"
+                android:layout_marginBottom="20dp"
+                android:onClick="@{(view) -> mainViewModel.buttonMainTranListOnClick()}"
                 android:text="거래 처리"
-                android:textColor="@color/black"
-                android:onClick="@{(view) -> mainViewModel.buttonMainTranListOnClick()}"/>
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textColor="@color/black" />
 
             <Button
                 android:id="@+id/button3"
                 style="@style/Widget.Material3.Button.IconButton.Outlined"
                 android:layout_width="match_parent"
                 android:layout_height="80dp"
+                android:layout_marginBottom="20dp"
+                android:onClick="@{(view) -> mainViewModel.buttonMainTranDetailOnClick()}"
                 android:text="거래 내역"
-                android:textColor="@color/black"
-                android:onClick="@{(view) -> mainViewModel.buttonMainTranDetailOnClick()}"/>
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textColor="@color/black" />
 
             <Button
                 android:id="@+id/button4"
                 style="@style/Widget.Material3.Button.IconButton.Outlined"
                 android:layout_width="match_parent"
                 android:layout_height="80dp"
+                android:layout_marginBottom="20dp"
+                android:onClick="@{(view) -> mainViewModel.buttonMainCouponOnClick()}"
                 android:text="쿠폰 등록"
-                android:textColor="@color/black"
-                android:onClick="@{(view) -> mainViewModel.buttonMainCouponOnClick()}"/>
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textColor="@color/black" />
         </LinearLayout>
 
     </LinearLayout>
