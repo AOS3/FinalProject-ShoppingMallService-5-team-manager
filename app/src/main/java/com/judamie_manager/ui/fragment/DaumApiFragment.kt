@@ -38,7 +38,8 @@ class DaumApiFragment : Fragment() {
             }
         }
 
-        webView.loadUrl("http://hyemimkim.github.io/webHostiongTest/indexx.html")
+        // webView.loadUrl("http://hyemimkim.github.io/webHostiongTest/indexx.html")
+        webView.loadUrl("http://hyemimkim.github.io/webhosting3/index2.html")
 
         return view
     }
