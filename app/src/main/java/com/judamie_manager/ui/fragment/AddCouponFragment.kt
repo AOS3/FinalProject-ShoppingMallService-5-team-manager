@@ -3,6 +3,7 @@ package com.judamie_manager.ui.fragment
 import android.icu.text.SimpleDateFormat
 import android.icu.util.Calendar
 import android.net.ParseException
+import android.os.BugreportManager
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -13,6 +14,8 @@ import com.judamie_manager.R
 import com.judamie_manager.activity.ServiceActivity
 import com.judamie_manager.databinding.FragmentAddCouponBinding
 import com.judamie_manager.databinding.FragmentCouponListBinding
+import com.judamie_manager.firebase.model.CouponModel
+import com.judamie_manager.firebase.service.CouponService
 import com.judamie_manager.ui.component.AddCouponDatePickerClass
 import com.judamie_manager.util.ServiceFragmentName
 import com.judamie_manager.viewmodel.fragmentviewmodel.AddCouponViewModel
@@ -73,7 +76,7 @@ class AddCouponFragment : Fragment() {
         serviceActivity.removeFragment(ServiceFragmentName.ADD_COUPON_FRAGMENT)
     }
 
-    // 쿠폰 추가 완료
+    // 쿠폰 추가 완료 처리 메서드
     fun registerCoupon(){
         fragmentAddCouponBinding.apply {
             // 쿠폰명
@@ -82,6 +85,8 @@ class AddCouponFragment : Fragment() {
             var couponDiscountRate = addCouponViewModel?.textFieldAddCouponSaleText?.value!!
             // 쿠폰 사용 기한
             var couponPeriod = addCouponViewModel?.textFieldAddCouponDateText?.value!!
+            // 시간
+            var couponTimeStamp = System.nanoTime()
 
             var isValid = true
 
@@ -143,6 +148,27 @@ class AddCouponFragment : Fragment() {
 
             // 모두 입력했을 시 쿠폰 등록하고(나중에 수정,,,) 쿠폰 목록 화면으로 이동
             if (isValid) {
+
+                // 업로드
+                CoroutineScope(Dispatchers.Main).launch {
+
+                    // 서버에 저장할 댓글 데이터
+                    val couponModel = CouponModel()
+                    couponModel.couponName = couponName
+                    couponModel.couponDiscountRate = couponDiscountRate
+                    couponModel.couponPeriod = couponPeriod
+                    couponModel.couponTimeStamp = couponTimeStamp
+
+                    // 저장한다.
+                    val work1 = async(Dispatchers.IO) {
+                        CouponService.addCouponData(couponModel)
+                    }
+                    val documentId = work1.await()
+                }
+                // 쿠폰의 아이디를 전달한다.
+//                val dataBundle = Bundle()
+//                dataBundle.putString("couponDocumentID", documentId)
+//                serviceActivity.replaceFragment(ServiceFragmentName.COUPON_LIST_FRAGMENT, false, true, dataBundle)
                 movePrevFragment()
             }
         }
