@@ -42,5 +42,15 @@ class PickupLocationService {
         suspend fun deletePickupLocationData(pickupLocDocumentID:String){
             PickupLocationRepository.deletePickupLocationData(pickupLocDocumentID)
         }
+
+        // 픽업지 id를 통해 데이터를 가져온다.
+        suspend fun selectPickupLocationDataOneById(pickupLocDocumentID:String) : PickupLocationModel{
+            // 글 데이터를 가져온다.
+            val pickupLocationVO = PickupLocationRepository.selectPickupLocationDataOneById(pickupLocDocumentID)
+            // BoardModel객체를 생성한다.
+            val pickupLocationModel = pickupLocationVO.toPickupLocationModel(pickupLocDocumentID)
+
+            return pickupLocationModel
+        }
     }
 }

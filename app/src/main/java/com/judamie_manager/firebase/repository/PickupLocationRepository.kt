@@ -48,5 +48,15 @@ class PickupLocationRepository {
             val documentReference = collectionReference.document(pickupLocDocumentID)
             documentReference.delete().await()
         }
+
+        // id를 통해 픽업지 데이터를 가져온다
+        suspend fun selectPickupLocationDataOneById(pickupLocDocumentID:String) : PickupLocationVO {
+            val firestore = FirebaseFirestore.getInstance()
+            val collectionReference = firestore.collection("PickupLocationData")
+            val documentReference = collectionReference.document(pickupLocDocumentID)
+            val documentSnapShot = documentReference.get().await()
+            val pickupLocationVO = documentSnapShot.toObject(PickupLocationVO::class.java)!!
+            return pickupLocationVO
+        }
     }
 }

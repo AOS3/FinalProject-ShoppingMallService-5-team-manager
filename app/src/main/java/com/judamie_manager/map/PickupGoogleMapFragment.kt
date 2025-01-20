@@ -1,7 +1,6 @@
 package com.judamie_manager.map
 
 import android.Manifest
-import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Geocoder
@@ -16,31 +15,32 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity.LOCATION_SERVICE
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.databinding.DataBindingUtil
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapsInitializer
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.snackbar.Snackbar
 import com.judamie_manager.R
 import com.judamie_manager.activity.ServiceActivity
-import com.judamie_manager.databinding.FragmentAddPickupLocationBinding
 import com.judamie_manager.databinding.FragmentPickupGoogleMapBinding
+import com.judamie_manager.firebase.model.PickupLocationModel
+import com.judamie_manager.firebase.service.PickupLocationService
 import com.judamie_manager.ui.component.ConfirmDialogFragment
 import com.judamie_manager.util.ServiceFragmentName
-import com.judamie_manager.viewmodel.fragmentviewmodel.AddPickupLocationViewModel
 import com.judamie_manager.viewmodel.fragmentviewmodel.PickupGoogleMapViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.IOException
 import java.util.Locale
 
@@ -64,13 +64,23 @@ class PickupGoogleMapFragment : Fragment() {
     // 다이얼로그 열렸나 닫혔나 확인하는 변수
     private var isDialogOpen = false
 
-    // 임시 픽업지 주소 리스트
-    val addressList = listOf(
-        "03900, 서울 마포구 하늘공원로 84 (상암동)",
-        "59735, 전남 여수시 이순신광장로 5 (교동)",
-        "서울 서대문구 증가로8길 42-2 (남가좌동)"
+//    // 임시 픽업지 주소 리스트
+//    val addressList = listOf(
+//        "03900, 서울 마포구 하늘공원로 84 (상암동)",
+//        "59735, 전남 여수시 이순신광장로 5 (교동)",
+//        "서울 서대문구 증가로8길 42-2 (남가좌동)",
+//        "대전 대덕구 계족로 532"
+//
+//    )
 
-    )
+    // 픽업지 리스트
+    var pickupList = mutableListOf<PickupLocationModel>()
+    // 픽업지 주소 리스트
+    var addressList = mutableListOf<String>()
+    // 픽업지 id
+    var pickupLocDocumentID = mutableListOf<String>()
+    // 서버에서 받아온 데이터를 담을 변수
+    lateinit var pickupLocationModel: PickupLocationModel
 
     // 확인할 권한 목록
     val permissionList = arrayOf(
@@ -95,6 +105,8 @@ class PickupGoogleMapFragment : Fragment() {
         createPermissionCheckLauncher()
         // 툴바를 구성하는 메서드 호출
         settingToolbar()
+        // 픽업지 데이터를 가져오는 메서드
+        gettingPickupLocData()
 
         // 권한 확인을 위한 런처 가동
         permissionCheckLauncher.launch(permissionList)
@@ -106,6 +118,21 @@ class PickupGoogleMapFragment : Fragment() {
 
 
         return fragmentPickupGoogleMapBinding.root
+    }
+
+    // 픽업지 데이터를 가져오는 메서드
+    fun gettingPickupLocData(){
+        CoroutineScope(Dispatchers.Main).launch {
+            val work1 = async(Dispatchers.IO){
+                PickupLocationService.gettingPickupLocationList()
+            }
+            pickupList = work1.await()
+            addressList = pickupList.map { it.pickupLocStreetAddress }.toMutableList()
+
+            // 픽업지 ID 리스트 가져오기
+            pickupLocDocumentID = pickupList.map { it.pickupLocDocumentID }.toMutableList()
+
+        }
     }
 
     // 권한 확인을 위해 사용할 런처 생성
@@ -237,15 +264,25 @@ class PickupGoogleMapFragment : Fragment() {
             // 현재 위치 측정을 시작한다.
             // getMyLocation()
 
-            // 주소 리스트의 모든 주소를 처리
-            addressList.forEach { address ->
-                addMarker(address)
+//            // 주소 리스트의 모든 주소를 처리
+//            addressList.forEach { address ->
+//                addMarker(address)
+//            }
+
+
+
+
+            // 주소 리스트와 픽업지 ID 리스트의 모든 항목을 처리
+            for (i in addressList.indices) {
+                val address = addressList[i]
+                val documentID = pickupLocDocumentID[i]
+                addMarker(address, documentID)
             }
         }
     }
 
     // 지도에 마커 추가하는 메서드
-    fun addMarker(address: String) {
+    fun addMarker(address: String, documentID: String) {
         val geocoder = Geocoder(requireContext(), Locale.getDefault())
         try {
             // 주소를 위도와 경도로 변환
@@ -258,7 +295,10 @@ class PickupGoogleMapFragment : Fragment() {
                     .position(latLng)
                     .title(address)
 
-                mainGoogleMap.addMarker(markerOptions)
+                // mainGoogleMap.addMarker(markerOptions)
+                val marker = mainGoogleMap.addMarker(markerOptions)
+                // 마커에 문서 ID를 태그로 저장
+                marker?.tag = documentID
 
                 // 마커 클릭 리스너 설정
                 setupMarkerClickListener(mainGoogleMap)
@@ -309,20 +349,72 @@ class PickupGoogleMapFragment : Fragment() {
         }
     }
 
-    // 테스트용 다이얼로그
-    fun onMarkerClick(marker: Marker) {
+//    // 테스트용 다이얼로그
+//    fun onMarkerClick(marker: Marker) {
+//
+//        // 다이얼로그가 열리면 위치 갱신을 막음
+//        isDialogOpen = true
+//
+//        // 마커에서 저장한 ID를 가져온다.
+//        val documentID = marker.tag as? String
+//
+//        // 다이얼로그에 띄울 변수들
+//        var title = ""
+//        var context = ""
+//        var phoneNumber = ""
+//
+//        // 아이디를 통해 데이터를 가져온다
+//        CoroutineScope(Dispatchers.Main).launch {
+//            if (documentID != null) {
+//                val work1 = async(Dispatchers.IO) {
+//                    PickupLocationService.selectPickupLocationDataOneById(documentID)
+//                }
+//
+//                pickupLocationModel = work1.await()
+//                title = pickupLocationModel.pickupLocName
+//                context = pickupLocationModel.pickupLocAddressDetail
+//                phoneNumber = pickupLocationModel.pickupLocPhoneNumber
+//            }
+//        }
+//
+//
+//        val dialog = ConfirmDialogFragment(title, context, phoneNumber)
+//        dialog.isCancelable = false
+//        activity?.let { dialog.show(it.supportFragmentManager, "ConfirmDialog") }
+//
+//    }
 
+    fun onMarkerClick(marker: Marker) {
         // 다이얼로그가 열리면 위치 갱신을 막음
         isDialogOpen = true
 
-        // 나중에... 위치 같은거... 픽업지 정보 띄워주기
-        val position = marker.position
-        val latitude = position.latitude
-        val longitude = position.longitude
+        // 마커에서 저장한 ID를 가져온다.
+        val documentID = marker.tag as? String
 
-        val dialog = ConfirmDialogFragment("CU입니다", "하하하\n안녕하세요", "01012345678")
-        dialog.isCancelable = false
-        activity?.let { dialog.show(it.supportFragmentManager, "ConfirmDialog") }
+        // 아이디를 통해 데이터를 가져온다
+        if (documentID != null) {
+            CoroutineScope(Dispatchers.Main).launch {
+                val pickupLocationModel = withContext(Dispatchers.IO) {
+                    // 비동기적으로 데이터 가져오기
+                    PickupLocationService.selectPickupLocationDataOneById(documentID)
+                }
 
+                // 데이터를 정상적으로 받아왔는지 확인
+                if (pickupLocationModel != null) {
+                    // 다이얼로그에 띄울 변수들
+                    val title = pickupLocationModel.pickupLocName
+                    val context = pickupLocationModel.pickupLocInfomation
+                    val phoneNumber = pickupLocationModel.pickupLocPhoneNumber
+
+                    // 다이얼로그 생성 및 표시
+                    val dialog = ConfirmDialogFragment(title, context, phoneNumber)
+                    dialog.isCancelable = false
+                    activity?.let { dialog.show(it.supportFragmentManager, "ConfirmDialog") }
+                } else {
+                    Log.e("PickupGoogleMapFragment", "Failed to load data for document ID: $documentID")
+                }
+            }
+        }
     }
+
 }
