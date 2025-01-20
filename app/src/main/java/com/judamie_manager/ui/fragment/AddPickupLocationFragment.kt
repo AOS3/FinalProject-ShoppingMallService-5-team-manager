@@ -198,10 +198,8 @@ class AddPickupLocationFragment : Fragment() {
                     // 픽업지 등록 완료 되면 스낵바 띄우기
                     view?.let { Snackbar.make(it, "픽업지가 등록되었습니다.", Snackbar.LENGTH_SHORT).show() }
                     serviceActivity.replaceFragment(ServiceFragmentName.SETTING_PICKUP_LOCATION, true, true, dataBundle)
+                    movePrevFragment()
                 }
-
-                // 등록다되면 픽업지 목록화면으로 이동
-                // movePrevFragment()
             }
         }
     }

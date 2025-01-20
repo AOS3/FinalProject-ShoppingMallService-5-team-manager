@@ -171,8 +171,8 @@ class AddCouponFragment : Fragment() {
                     dataBundle.putString("couponDocumentID", documentId)
                     // 쿠폰 등록 완료 되면 스낵바 띄우기
                     view?.let { Snackbar.make(it, "쿠폰이 등록되었습니다.", Snackbar.LENGTH_SHORT).show() }
-                    serviceActivity.replaceFragment(ServiceFragmentName.COUPON_LIST_FRAGMENT, false, true, dataBundle)
-                    // movePrevFragment()
+                    serviceActivity.replaceFragment(ServiceFragmentName.COUPON_LIST_FRAGMENT, true, true, dataBundle)
+                    movePrevFragment()
                 }
             }
         }

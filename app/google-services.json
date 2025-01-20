@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "274384038446",
-    "project_id": "zzsss-eb772",
-    "storage_bucket": "zzsss-eb772.firebasestorage.app"
+    "project_number": "483132913009",
+    "project_id": "shoppingmallservice-5-team",
+    "storage_bucket": "shoppingmallservice-5-team.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:274384038446:android:fb4c7776360395be63cdbf",
+        "mobilesdk_app_id": "1:483132913009:android:c749bd4736b65638aeb2d0",
         "android_client_info": {
           "package_name": "com.judamie_manager"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyChPKL2IiJA27_TQPt_elBaJnE5wU0L_JM"
+          "current_key": "AIzaSyAc28EgNOrFqX6JfhSkN7RHAPjMs7QnUeI"
         }
       ],
       "services": {
