@@ -26,8 +26,24 @@ enum class ServiceFragmentName(var number:Int, var str:String){
     PICKUP_GOOGLE_MAP_FRAGMENT(11, "PickupGoogleMapFragment")
 }
 
-// 유저 프래그먼트를 나타내는 값들
+// 유저 프래그먼트를 나타내는 값
 enum class UserFragmentName(var number:Int, var str:String){
     // 로그인 화면
     USER_LOGIN_FRAGMENT(1, "UserLoginFragment"),
+}
+
+// 쿠폰 사용 여부를 나타내는 값
+enum class CouponUsableType(var num:Int, var str: String){
+    // 사용 가능
+    COUPON_USABLE(1, "사용 가능"),
+    // 사용 불가능
+    COUPON_UNUSABLE(2, "사용 불가능")
+}
+
+// 픽업지 상태를 나타내는 값
+enum class PickupStateType(var num:Int, var str: String){
+    // 기본
+    PICKUP_STATE_NORMAL(1, "정상"),
+    // 삭제
+    PICKUP_STATE_DELETE(2, "삭제")
 }

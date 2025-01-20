@@ -79,9 +79,9 @@ class AddCouponFragment : Fragment() {
             // 쿠폰명
             var couponName = addCouponViewModel?.textFieldAddCouponNameText?.value!!
             // 쿠폰 할인율
-            var couponSale = addCouponViewModel?.textFieldAddCouponSaleText?.value!!
+            var couponDiscountRate = addCouponViewModel?.textFieldAddCouponSaleText?.value!!
             // 쿠폰 사용 기한
-            var couponDate = addCouponViewModel?.textFieldAddCouponDateText?.value!!
+            var couponPeriod = addCouponViewModel?.textFieldAddCouponDateText?.value!!
 
             var isValid = true
 
@@ -96,13 +96,13 @@ class AddCouponFragment : Fragment() {
             }
 
             // 쿠폰 할인율 체크
-            if (couponSale.isEmpty()) {
+            if (couponDiscountRate.isEmpty()) {
                 textFieldCouponSale.error = "할인율을 입력해주세요."
                 // textFieldCouponSale.editText?.requestFocus()
                 serviceActivity.showSoftInput(textFieldCouponSale.editText!!)
                 isValid = false
             } else {
-                val sale = couponSale.toIntOrNull()
+                val sale = couponDiscountRate.toIntOrNull()
                 if (sale == null || sale < 0 || sale > 100) {
                     textFieldCouponSale.error = "0에서 100 사이의 숫자를 입력해주세요."
                     serviceActivity.showSoftInput(textFieldCouponSale.editText!!)
@@ -113,14 +113,14 @@ class AddCouponFragment : Fragment() {
             }
 
             // 쿠폰 사용 기한 체크
-            if (couponDate.isEmpty()) {
+            if (couponPeriod.isEmpty()) {
                 textFieldCouponDate.error = "사용기한을 입력해주세요."
                 // textFieldCouponDate.editText?.requestFocus()
                 isValid = false
             } else {
                 try {
                     val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-                    val selectedDate = dateFormat.parse(couponDate)
+                    val selectedDate = dateFormat.parse(couponPeriod)
 
                     val currentDate = Calendar.getInstance().apply {
                         set(Calendar.HOUR_OF_DAY, 0)
