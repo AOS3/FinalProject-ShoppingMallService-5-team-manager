@@ -16,30 +16,39 @@ import com.judamie_manager.util.ServiceFragmentName
 import com.judamie_manager.databinding.FragmentCouponListBinding
 import com.judamie_manager.databinding.FragmentMainBinding
 import com.judamie_manager.databinding.RowCouponListBinding
+import com.judamie_manager.firebase.model.CouponModel
+import com.judamie_manager.firebase.service.CouponService
 import com.judamie_manager.viewmodel.fragmentviewmodel.CouponListViewModel
 import com.judamie_manager.viewmodel.rowviewmodel.RowCouponListViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 
 class CouponListFragment : Fragment() {
 
     lateinit var fragmentCouponListBinding: FragmentCouponListBinding
     lateinit var serviceActivity: ServiceActivity
 
-    // ReyclerView 구성을 위한 임시 데이터
-    val tempList1 = Array(100) {
-        "쿠폰명 ${it + 1}"
-    }
-    val tempList2 = Array(100){
-        "사용기한 ${it + 1}"
-    }
+//    // ReyclerView 구성을 위한 임시 데이터
+//    val tempList1 = Array(100) {
+//        "쿠폰명 ${it + 1}"
+//    }
+//    val tempList2 = Array(100){
+//        "사용기한 ${it + 1}"
+//    }
+//
+//    // 임시 데이터를 이용해 recyclerViewList를 구성
+//    val recyclerViewList = tempList1.zip(tempList2) { couponName, couponDate ->
+//        CouponItem(couponName, couponDate)
+//    }
+//
+//    // 데이터 클래스를 생성하여 couponName과 couponDate를 포함
+//    // 나중엔 var recyclerViewList = mutableListOf<CouponModel>() 이런식으로...바꿔..
+//    data class CouponItem(val couponName: String, val couponDate: String)
 
-    // 임시 데이터를 이용해 recyclerViewList를 구성
-    val recyclerViewList = tempList1.zip(tempList2) { couponName, couponDate ->
-        CouponItem(couponName, couponDate)
-    }
-
-    // 데이터 클래스를 생성하여 couponName과 couponDate를 포함
-    // 나중엔 var recyclerViewList = mutableListOf<CouponModel>() 이런식으로...바꿔..
-    data class CouponItem(val couponName: String, val couponDate: String)
+    // 리사이클러뷰 구성을 위한 리스트
+    var recyclerViewList = mutableListOf<CouponModel>()
 
 
     override fun onCreateView(
@@ -54,10 +63,15 @@ class CouponListFragment : Fragment() {
 
         serviceActivity = activity as ServiceActivity
 
+        // RecyclerView 구성을 위한 리스트를 초기화한다.
+        recyclerViewList.clear()
+
         // 툴바를 구성하는 메서드 호출
         settingToolbar()
         // 리사이클러뷰 구성 메서드 호출
         settingRecyclerView()
+        // 데이터를 가져와 리사이클러뷰를 갱신하는 메서드
+        refreshRecyclerView()
 
         return fragmentCouponListBinding.root
     }
@@ -83,6 +97,18 @@ class CouponListFragment : Fragment() {
                 }
                 true
             }
+        }
+    }
+
+    // 데이터를 가져와 RecyclerView를 갱신하는 메서드
+    fun refreshRecyclerView(){
+        CoroutineScope(Dispatchers.Main).launch {
+            val work1 = async(Dispatchers.IO){
+                CouponService.gettingCouponList()
+            }
+            recyclerViewList = work1.await()
+
+            fragmentCouponListBinding.recyclerViewCoupon.adapter?.notifyDataSetChanged()
         }
     }
 
@@ -118,7 +144,7 @@ class CouponListFragment : Fragment() {
 
         override fun onBindViewHolder(holder: MainViewHolder, position: Int) {
             holder.rowCouponListBinding.rowCouponListViewModel?.textViewCouponNameText?.value = recyclerViewList[position].couponName
-            holder.rowCouponListBinding.rowCouponListViewModel?.textViewCouponDateText?.value = recyclerViewList[position].couponDate
+            holder.rowCouponListBinding.rowCouponListViewModel?.textViewCouponDateText?.value = recyclerViewList[position].couponPeriod
         }
     }
 }
