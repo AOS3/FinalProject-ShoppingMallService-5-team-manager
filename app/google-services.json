@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "274384038446",
+    "project_id": "zzsss-eb772",
+    "storage_bucket": "zzsss-eb772.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:274384038446:android:fb4c7776360395be63cdbf",
+        "android_client_info": {
+          "package_name": "com.judamie_manager"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyChPKL2IiJA27_TQPt_elBaJnE5wU0L_JM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

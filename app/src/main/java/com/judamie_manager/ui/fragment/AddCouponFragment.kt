@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import com.google.android.material.snackbar.Snackbar
 import com.judamie_manager.R
 import com.judamie_manager.activity.ServiceActivity
 import com.judamie_manager.databinding.FragmentAddCouponBinding
@@ -164,12 +165,15 @@ class AddCouponFragment : Fragment() {
                         CouponService.addCouponData(couponModel)
                     }
                     val documentId = work1.await()
+
+                    //쿠폰의 아이디를 전달한다.
+                    val dataBundle = Bundle()
+                    dataBundle.putString("couponDocumentID", documentId)
+                    // 쿠폰 등록 완료 되면 스낵바 띄우기
+                    view?.let { Snackbar.make(it, "쿠폰이 등록되었습니다.", Snackbar.LENGTH_SHORT).show() }
+                    serviceActivity.replaceFragment(ServiceFragmentName.COUPON_LIST_FRAGMENT, false, true, dataBundle)
+                    // movePrevFragment()
                 }
-                // 쿠폰의 아이디를 전달한다.
-//                val dataBundle = Bundle()
-//                dataBundle.putString("couponDocumentID", documentId)
-//                serviceActivity.replaceFragment(ServiceFragmentName.COUPON_LIST_FRAGMENT, false, true, dataBundle)
-                movePrevFragment()
             }
         }
     }

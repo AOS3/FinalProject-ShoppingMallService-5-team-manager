@@ -20,7 +20,7 @@ class PickupLocationModel {
     // 픽업지 상태
     var pickupLocState = PickupStateType.PICKUP_STATE_NORMAL
     // 시간
-    var pickupLocTimeStamp = ""
+    var pickupLocTimeStamp = 0L
 
     fun toPickupLocationVO(): PickupLocationVO {
         val pickupLocationVO = PickupLocationVO()
