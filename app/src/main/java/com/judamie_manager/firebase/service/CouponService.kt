@@ -1,9 +1,14 @@
 package com.judamie_manager.firebase.service
 
+import android.content.Context
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
 import com.judamie_manager.firebase.model.CouponModel
 import com.judamie_manager.firebase.repository.CouponRepository
 import com.judamie_manager.firebase.vo.CouponVO
+import com.judamie_manager.firebase.worker.CouponStatusUpdateWorker
 import com.judamie_manager.ui.fragment.CouponListFragment
+import java.util.concurrent.TimeUnit
 
 class CouponService {
 
@@ -32,6 +37,16 @@ class CouponService {
             }
 
             return couponList
+        }
+
+        // 쿠폰 상태를 업데이트 (하루에 한번 주기적으로 실행)
+        fun startCouponStatusUpdateWork(context: Context) {
+            val workRequest = PeriodicWorkRequestBuilder<CouponStatusUpdateWorker>(1, TimeUnit.DAYS)
+                .setInitialDelay(1, TimeUnit.MINUTES) // 앱 시작 후 1분 뒤 실행 (테스트 용)
+                .build()
+
+            // WorkManager에 작업 예약
+            WorkManager.getInstance(context).enqueue(workRequest)
         }
     }
 }

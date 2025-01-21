@@ -66,5 +66,8 @@ dependencies {
     implementation("com.google.firebase:firebase-firestore:25.1.1")
     implementation("com.google.firebase:firebase-storage:21.0.1")
 
+    val work_version = "2.9.1"
+    implementation("androidx.work:work-runtime-ktx:$work_version")
+
 
 }

@@ -17,6 +17,7 @@ import androidx.fragment.app.commit
 import com.google.android.material.transition.MaterialSharedAxis
 import com.judamie_manager.R
 import com.judamie_manager.databinding.ActivityServiceBinding
+import com.judamie_manager.firebase.service.CouponService
 import com.judamie_manager.map.PickupGoogleMapFragment
 import com.judamie_manager.ui.fragment.AddCouponFragment
 import com.judamie_manager.ui.fragment.AddPickupLocationFragment
@@ -54,6 +55,13 @@ class ServiceActivity : AppCompatActivity() {
 
         // 첫 프래그먼트를 보여준다.
         replaceFragment(ServiceFragmentName.MAIN_FRAGMENT, false, false, null)
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        // 쿠폰 상태 업데이트 작업을 시작합니다.
+        CouponService.startCouponStatusUpdateWork(this)
     }
 
     // 프래그먼트를 교체하는 함수
