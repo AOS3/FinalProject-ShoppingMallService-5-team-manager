@@ -15,6 +15,7 @@ class LoginViewModel (val loginFragment: LoginFragment) : ViewModel() {
 
     // buttonUserLoginJoin - onClick
     fun buttonUserLoginJoinOnClick(){
-        loginFragment.proLogin()
+        // loginFragment.proLogin(managerId, managerPassword)
+        loginFragment.gettingData()
     }
 }

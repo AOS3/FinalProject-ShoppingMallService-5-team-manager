@@ -47,3 +47,11 @@ enum class PickupStateType(var num:Int, var str: String){
     // 삭제
     PICKUP_STATE_DELETE(2, "삭제")
 }
+
+// 관리자 상태를 나타내는 값
+enum class ManagerStateType(var num:Int, var str: String){
+    // 활성화
+    MANAGER_STATE_NORMAL(1, "정상"),
+    // 비활성화
+    MANAGER_STATE_DELETE(2, "삭제")
+}

@@ -13,16 +13,21 @@ import com.judamie_manager.R
 import com.judamie_manager.activity.ServiceActivity
 import com.judamie_manager.activity.UserActivity
 import com.judamie_manager.databinding.FragmentLoginBinding
+import com.judamie_manager.firebase.service.ManagerService
 import com.judamie_manager.viewmodel.fragmentviewmodel.LoginViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 
 class LoginFragment : Fragment() {
 
     lateinit var fragmentLoginBinding: FragmentLoginBinding
     lateinit var userActivity: UserActivity
 
-    // 임시 아이디, 비밀번호
-    val aaaId = "1"
-    val aaaPassword = "2"
+    lateinit var managerId : String
+    lateinit var managerPassword : String
+    lateinit var managerData : Map<String, *>
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
@@ -35,9 +40,39 @@ class LoginFragment : Fragment() {
         return fragmentLoginBinding.root
     }
 
+    fun gettingData() {
+        // 서버에서 관리자 데이터 가져오기
+        CoroutineScope(Dispatchers.Main).launch {
+            managerData = async(Dispatchers.IO) {
+                ManagerService.gettingManagerData()
+            }.await()
+
+            // 가져온 데이터에서 ID와 비밀번호 추출
+            val managerId = managerData["managerLoginId"].toString()
+            val managerPassword = managerData["managerLoginPassword"].toString()
+
+            proLogin(managerId, managerPassword)
+
+        }
+    }
+    
     // 로그인 처리 메서드
-    fun proLogin(){
+    fun proLogin(managerId: String, managerPassword: String) {
         fragmentLoginBinding.apply {
+
+//            // 서버에서 관리자 데이터 가져오기
+//            CoroutineScope(Dispatchers.Main).launch{
+//                managerData = async(Dispatchers.IO){
+//                    ManagerService.gettingManagerData()
+//                }.await()
+//
+//                // 가져온 데이터에서 ID와 비밀번호 추출
+//                val managerId = managerData["managerLoginId"].toString()
+//                val managerPassword = managerData["managerLoginPassword"].toString()
+//
+//                proLogin(managerId, managerPassword)
+//
+//            }
 
             // 아이디 입력 여부 확인
             if (loginViewModel?.textFieldUserLoginIdEditTextText?.value?.isEmpty()!!) {
@@ -65,10 +100,21 @@ class LoginFragment : Fragment() {
 
             if (loginUserId.isNotEmpty() && loginUserPw.isNotEmpty()) {
                 // 아이디, 비밀번호 같을 시 ServiceActivity로 이동
-                if (aaaId == loginUserId && aaaPassword == loginUserPw) {
+                if (managerId == loginUserId && managerPassword == loginUserPw) {
+
+                    // 만약 자동 로그인이 체크돼 있을 경우
+                    if(loginViewModel?.checkBoxUserLoginAutoChecked?.value!!){
+                        CoroutineScope(Dispatchers.Main).launch{
+                            async(Dispatchers.IO){
+                                ManagerService.updateAutoLoginToken(userActivity, managerData["documentId"].toString())
+                            }
+                        }
+                    }
+
                     val intent = Intent(userActivity, ServiceActivity::class.java)
                     startActivity(intent)
                     userActivity.finish()
+
                 } else {
                     loginViewModel?.textFieldUserLoginIdEditTextText?.value = ""
                     loginViewModel?.textFieldUserLoginPwEditTextText?.value = ""

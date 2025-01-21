@@ -1,5 +1,7 @@
 package com.judamie_manager.activity
 
+import android.content.Context
+import android.content.Intent
 import android.graphics.Rect
 import android.os.Bundle
 import android.os.SystemClock
@@ -18,8 +20,13 @@ import androidx.fragment.app.commit
 import com.google.android.material.transition.MaterialSharedAxis
 import com.judamie_manager.R
 import com.judamie_manager.databinding.ActivityUserBinding
+import com.judamie_manager.firebase.service.ManagerService
 import com.judamie_manager.ui.fragment.LoginFragment
 import com.judamie_manager.util.UserFragmentName
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import kotlin.concurrent.thread
 
 class UserActivity : AppCompatActivity() {
@@ -42,8 +49,11 @@ class UserActivity : AppCompatActivity() {
             insets
         }
 
+        // 자동 로그인 처리 메서드 호출
+        autoLoginProcessing()
+
         // 첫번째 Fragment를 설정한다.
-        replaceFragment(UserFragmentName.USER_LOGIN_FRAGMENT, false, false, null)
+        // replaceFragment(UserFragmentName.USER_LOGIN_FRAGMENT, false, false, null)
     }
 
     // 프래그먼트를 교체하는 함수
@@ -131,5 +141,37 @@ class UserActivity : AppCompatActivity() {
     // 프래그먼트를 BackStack에서 제거하는 메서드
     fun removeFragment(fragmentName: UserFragmentName){
         supportFragmentManager.popBackStack(fragmentName.str, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+    }
+
+    // 자동 로그인 처리 메서드
+    // 자동 로그인에 실패하면 LoginFragment를 띄우고
+    // 자동 로그인에 성공하면 현재 Activity를 종료하고 ServiceActivity를 실행킨다.
+    fun autoLoginProcessing(){
+        // Preference에 login token이 있는지 확인한다.
+        val pref = getSharedPreferences("LoginToken", Context.MODE_PRIVATE)
+        val loginToken = pref.getString("token", null)
+
+        CoroutineScope(Dispatchers.Main).launch {
+            if(loginToken != null){
+                // 사용자 정보를 가져온다.
+                val work1 = async(Dispatchers.IO){
+                    ManagerService.selectManagerDataByLoginToken(loginToken)
+                }
+                val loginUserModel = work1.await()
+                // 가져온 사용자 데이터가 있다면
+                if(loginUserModel != null){
+                    // ServiceActivity를 실행하고 현재 Activity를 종료한다.
+                    val intent = Intent(this@UserActivity, ServiceActivity::class.java)
+                    startActivity(intent)
+                    finish()
+                } else {
+                    // 첫번째 Fragment를 설정한다.
+                    replaceFragment(UserFragmentName.USER_LOGIN_FRAGMENT, false, false, null)
+                }
+            } else {
+                // 첫번째 Fragment를 설정한다.
+                replaceFragment(UserFragmentName.USER_LOGIN_FRAGMENT, false, false, null)
+            }
+        }
     }
 }

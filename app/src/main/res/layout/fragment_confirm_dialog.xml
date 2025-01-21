@@ -15,9 +15,13 @@
         android:layout_height="match_parent"
         android:background="@drawable/view_round_white_dialog"
         android:gravity="center"
-        android:minWidth="300dp"
+        android:minWidth="270dp"
         android:padding="20dp">
 
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="7dp" />
 
         <TextView
             android:id="@+id/pickupLocationName"
@@ -25,13 +29,9 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:textColor="#00696B"
-            android:textSize="45sp"
+            android:textSize="37sp"
             android:textStyle="bold"
             android:text="@{confirmDialogViewModel.pickupLocationNameText}" />
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="10dp" />
 
         <android.widget.Button
             android:id="@+id/pickupLocationCall"
@@ -53,14 +53,18 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:inputType="textMultiLine"
-            android:minHeight="20dp"
+            android:minHeight="1dp"
             android:text="@{confirmDialogViewModel.pickupLocationDetailText}"
-            android:textSize="15sp"
+            android:textSize="18sp"
             android:visibility="@{confirmDialogViewModel.pickupLocationDetailTextVisibility}" />
 
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="5dp" />
+
         <LinearLayout
-            android:layout_width="180dp"
-            android:layout_height="80dp"
+            android:layout_width="150dp"
+            android:layout_height="40dp"
             android:layout_marginTop="10dp"
             android:orientation="horizontal">
 
