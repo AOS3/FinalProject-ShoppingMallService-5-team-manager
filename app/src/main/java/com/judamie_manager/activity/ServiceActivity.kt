@@ -37,6 +37,11 @@ class ServiceActivity : AppCompatActivity() {
 
     lateinit var activityServiceBinding: ActivityServiceBinding
 
+
+    // 거래 완료 시간을 저장할 맵 (orderDocumentID -> transactionFinishTime)
+    val transactionFinishTimes = mutableMapOf<String, Long>()
+
+
     // 현재 Fragment와 다음 Fragment를 담을 변수(애니메이션 이동 때문에...)
     var newFragment: Fragment? = null
     var oldFragment: Fragment? = null
@@ -124,6 +129,16 @@ class ServiceActivity : AppCompatActivity() {
             }
         }
     }
+
+//    // 거래 시간 업데이트 메서드
+//    fun updateTransactionFinishTime(time: Long) {
+//        transactionFinishTime = time
+//    }
+//
+//    // 거래 시간 업데이트한거 초기화
+//    fun nullTransactionFinishTime() {
+//        transactionFinishTime = 0L
+//    }
 
     // 프래그먼트를 BackStack에서 제거하는 메서드
     fun removeFragment(fragmentName: ServiceFragmentName){

@@ -55,3 +55,30 @@ enum class ManagerStateType(var num:Int, var str: String){
     // 비활성화
     MANAGER_STATE_DELETE(2, "삭제")
 }
+
+// 주문 패키지 상태값
+enum class OrderPackageStateType(var num:Int, var str: String){
+    // 활성화
+    ORDER_PACKAGE_STATE_NORMAL(1, "활성화"),
+    // 비활성화
+    ORDER_PACKAGE_STATE_DELETE(2, "비활성화")
+}
+
+// 주문 상태값
+enum class OrderStateType(var num:Int, var str: String){
+
+    ORDER_STATE_PAYMENT_COMPLETE(1, "주문 완료"),
+    ORDER_STATE_DELIVERY(2, "배송 완료"),
+    ORDER_STATE_PICKUP_COMPLETED(3, "픽업 완료"),
+    ORDER_STATE_TRANSFER_COMPLETED(4, "입금 처리 완료");
+
+
+
+    companion object {
+        // 숫자를 받아서 CouponUsableType 변환
+        fun fromNumber(number: Int): OrderStateType {
+            return values().find { it.num == number }
+                ?: ORDER_STATE_PAYMENT_COMPLETE // 기본값 설정
+        }
+    }
+}

@@ -1,5 +1,6 @@
 package com.judamie_manager.ui.fragment
 
+import android.icu.text.SimpleDateFormat
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -24,6 +25,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import java.util.Date
+import java.util.Locale
 
 class CouponListFragment : Fragment() {
 
@@ -144,7 +147,17 @@ class CouponListFragment : Fragment() {
 
         override fun onBindViewHolder(holder: MainViewHolder, position: Int) {
             holder.rowCouponListBinding.rowCouponListViewModel?.textViewCouponNameText?.value = recyclerViewList[position].couponName
-            holder.rowCouponListBinding.rowCouponListViewModel?.textViewCouponDateText?.value = recyclerViewList[position].couponPeriod
+            // holder.rowCouponListBinding.rowCouponListViewModel?.textViewCouponDateText?.value = recyclerViewList[position].couponPeriod.toString()
+
+            // couponPeriod가 밀리초 단위로 저장된 경우 이를 Date로 변환
+            val couponExpirationDate = Date(recyclerViewList[position].couponPeriod) // 밀리초 값을 Date로 변환
+
+            // 날짜를 "yyyy-MM-dd" 형식으로 변환
+            val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+            val formattedDate = dateFormat.format(couponExpirationDate)
+
+            // 변환된 날짜를 텍스트로 설정
+            holder.rowCouponListBinding.rowCouponListViewModel?.textViewCouponDateText?.value = formattedDate
         }
     }
 }

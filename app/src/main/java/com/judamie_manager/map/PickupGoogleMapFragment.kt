@@ -349,40 +349,6 @@ class PickupGoogleMapFragment : Fragment() {
         }
     }
 
-//    // 테스트용 다이얼로그
-//    fun onMarkerClick(marker: Marker) {
-//
-//        // 다이얼로그가 열리면 위치 갱신을 막음
-//        isDialogOpen = true
-//
-//        // 마커에서 저장한 ID를 가져온다.
-//        val documentID = marker.tag as? String
-//
-//        // 다이얼로그에 띄울 변수들
-//        var title = ""
-//        var context = ""
-//        var phoneNumber = ""
-//
-//        // 아이디를 통해 데이터를 가져온다
-//        CoroutineScope(Dispatchers.Main).launch {
-//            if (documentID != null) {
-//                val work1 = async(Dispatchers.IO) {
-//                    PickupLocationService.selectPickupLocationDataOneById(documentID)
-//                }
-//
-//                pickupLocationModel = work1.await()
-//                title = pickupLocationModel.pickupLocName
-//                context = pickupLocationModel.pickupLocAddressDetail
-//                phoneNumber = pickupLocationModel.pickupLocPhoneNumber
-//            }
-//        }
-//
-//
-//        val dialog = ConfirmDialogFragment(title, context, phoneNumber)
-//        dialog.isCancelable = false
-//        activity?.let { dialog.show(it.supportFragmentManager, "ConfirmDialog") }
-//
-//    }
 
     fun onMarkerClick(marker: Marker) {
         // 다이얼로그가 열리면 위치 갱신을 막음

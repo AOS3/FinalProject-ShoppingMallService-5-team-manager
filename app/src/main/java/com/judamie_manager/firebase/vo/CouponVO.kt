@@ -7,9 +7,9 @@ class CouponVO {
     // 쿠폰 이름
     var couponName = ""
     // 쿠폰 할인율
-    var couponDiscountRate = ""
+    var couponDiscountRate = 1
     // 쿠폰 사용 기한
-    var couponPeriod = ""
+    var couponPeriod = 0L
     // 쿠폰 사용 가능 여부
     var couponState = 1
     // 시간
