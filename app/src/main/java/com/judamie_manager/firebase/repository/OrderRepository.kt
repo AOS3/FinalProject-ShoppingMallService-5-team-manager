@@ -5,6 +5,7 @@ import com.google.android.gms.tasks.Tasks
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.QuerySnapshot
 import com.judamie_manager.firebase.model.OrderDataModel
 import com.judamie_manager.firebase.vo.OrderDataVO
 import com.judamie_manager.util.OrderStateType
@@ -260,37 +261,34 @@ class OrderRepository {
             Log.d("FirestoreSpeedTest", "Firebase 요청 시작: $startTime ms")
 
 
-            // Firebase 요청을 병렬로 실행, 비어있는 sellerId는 "Unknown" 추가
-            val sellerRequests = sellerIds.map { sellerId ->
+            val deferredResults = sellerIds.map { sellerId ->
                 if (sellerId.isNotEmpty()) {
-                    firestore.collection("SellerData").document(sellerId).get()
+                    firestore.collection("SellerData")
+                        .whereEqualTo("sellerId", sellerId)  // sellerId 필드 기준으로 조회
+                        .get()
                 } else {
-                    null // 비어있는 경우 null을 반환하여 이후 처리에서 제외
+                    null
                 }
             }
 
-            // 비어있는 sellerId에 대한 "Unknown" 추가
             sellerIds.forEach { sellerId ->
                 if (sellerId.isEmpty()) {
                     sellerNames.add("Unknown")
                 }
             }
 
-            // Firebase 요청 리스트에서 null 제거
-            val validRequests = sellerRequests.filterNotNull()
+            val validRequests = deferredResults.filterNotNull()
 
             if (validRequests.isEmpty()) {
-                return sellerNames // 모든 sellerId가 비어 있으면 바로 반환
+                return sellerNames
             }
 
             try {
-                // Firebase 요청 병렬 처리
-                val results = Tasks.whenAllSuccess<DocumentSnapshot>(validRequests).await()
+                val results = Tasks.whenAllSuccess<QuerySnapshot>(validRequests).await()
 
-                // 결과 처리
-                results.forEach { document ->
-                    if (document.exists()) {
-                        val sellerName = document.getString("storeName") ?: "Unknown"
+                results.forEach { querySnapshot ->
+                    if (!querySnapshot.isEmpty) {
+                        val sellerName = querySnapshot.documents.first().getString("storeName") ?: "Unknown"
                         sellerNames.add(sellerName.takeIf { it.isNotEmpty() } ?: "Unknown")
                     } else {
                         sellerNames.add("Unknown")
@@ -453,7 +451,7 @@ class OrderRepository {
             // Firebase 요청을 병렬로 실행 (비어있는 productId는 "Unknown" 추가)
             val productRequests = productIds.map { productId ->
                 if (productId.isNotEmpty()) {
-                    firestore.collection("ProductData").document(productId).get()
+                    firestore.collection("productData").document(productId).get()
                 } else {
                     null
                 }
@@ -528,7 +526,7 @@ class OrderRepository {
             // Firebase 요청을 병렬로 실행 (비어있는 productId는 "Unknown" 추가)
             val productRequests = productIds.map { productId ->
                 if (productId.isNotEmpty()) {
-                    firestore.collection("ProductData").document(productId).get()
+                    firestore.collection("productData").document(productId).get()
                 } else {
                     null
                 }
