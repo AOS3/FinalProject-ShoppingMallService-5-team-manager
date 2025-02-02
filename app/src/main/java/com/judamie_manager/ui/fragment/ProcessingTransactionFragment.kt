@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.MutableLiveData
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.firestore.FirebaseFirestore
 import com.judamie_manager.R
 import com.judamie_manager.activity.ServiceActivity
 import com.judamie_manager.util.ServiceFragmentName
@@ -157,9 +158,20 @@ class ProcessingTransactionFragment : Fragment() {
             // serviceActivity.updateTransactionFinishTime(depositTime)
             // transactionFinishTimes 맵에 거래 완료 시간 저장
             serviceActivity.transactionFinishTimes[orderDocumentID] = depositTime
-            // TransactionsListFragment에 직접 접근하여 refreshRecyclerView 호출
-            val transactionsListFragment = activity?.supportFragmentManager?.findFragmentByTag(TransactionsListFragment::class.java.simpleName) as? TransactionsListFragment
-            transactionsListFragment?.refreshRecyclerView()
+
+            // Firebase Firestore에 orderTransactionTime 업데이트
+            val orderRef = FirebaseFirestore.getInstance()
+                .collection("OrderData")
+                .document(orderDocumentID)
+
+            orderRef.update("orderTransactionTime", depositTime)
+                .addOnSuccessListener {
+                    Log.d("FirestoreUpdate", "orderTransactionTime 업데이트 성공")
+                }
+                .addOnFailureListener { e ->
+                    Log.e("FirestoreUpdate", "orderTransactionTime 업데이트 실패", e)
+                }
+
         }else{
             view?.let { Snackbar.make(it, "배송, 픽업 처리가 완료된 후 시도해주세요", Snackbar.LENGTH_SHORT).show() }
         }

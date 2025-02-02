@@ -124,6 +124,15 @@ class TransactionsListFragment : Fragment() {
                 fragmentTransactionsListBinding.recyclerviewTransactionList.adapter?.notifyDataSetChanged()
 
 
+            }else{
+                // 데이터가 비어 있을 경우 UI를 업데이트
+                fragmentTransactionsListBinding.progressBar.visibility = View.GONE
+
+                sellerNameList.clear()
+                userNameList.clear()
+                productNameList.clear()
+
+                fragmentTransactionsListBinding.recyclerviewTransactionList.adapter?.notifyDataSetChanged()
             }
 
 
