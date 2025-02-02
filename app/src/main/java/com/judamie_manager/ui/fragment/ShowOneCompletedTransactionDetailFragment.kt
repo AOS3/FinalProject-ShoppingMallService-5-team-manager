@@ -81,7 +81,7 @@ class ShowOneCompletedTransactionDetailFragment : Fragment() {
     fun gettingArguments() {
         orderDocumentID = arguments?.getString("orderDocumentID")!!
         sellerName = arguments?.getString("sellerName")!!
-        pickupName = arguments?.getString("pickupName")!!
+        // pickupName = arguments?.getString("pickupName")!!
         userName = arguments?.getString("userName")!!
         productName = arguments?.getString("productName")!!
         orderTime = arguments?.getString("orderTime")!!

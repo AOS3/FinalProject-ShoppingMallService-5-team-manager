@@ -132,7 +132,7 @@ class CompletedTransactionsListFragment : Fragment() {
             if (recyclerViewList.isNotEmpty()) {
                 val sellerIds = recyclerViewList.map { it.sellerDocumentID }
                 val userIds = recyclerViewList.map { it.userDocumentID }
-                val pickupIds = recyclerViewList.map { it.pickupLocDocumentID }
+                // val pickupIds = recyclerViewList.map { it.pickupLocDocumentID }
                 val productIds = recyclerViewList.map { it.productDocumentID }
 
                 val sellerNamesDeferred = async(Dispatchers.IO) {
@@ -141,9 +141,9 @@ class CompletedTransactionsListFragment : Fragment() {
                 val userNamesDeferred = async(Dispatchers.IO) {
                     OrderRepository.getUserNamesByIds(userIds)
                 }
-                val pickupNamesDeferred = async(Dispatchers.IO) {
-                    OrderRepository.getPickupNamesByIds(pickupIds)
-                }
+//                val pickupNamesDeferred = async(Dispatchers.IO) {
+//                    OrderRepository.getPickupNamesByIds(pickupIds)
+//                }
                 val productNamesDeferred = async(Dispatchers.IO) {
                     OrderRepository.getProductNamesByIds(productIds)
                 }
@@ -158,7 +158,7 @@ class CompletedTransactionsListFragment : Fragment() {
                 // 모든 데이터를 기다린 후 처리
                 sellerNameList = sellerNamesDeferred.await().toMutableList()
                 userNameList = userNamesDeferred.await().toMutableList()
-                pickupNameList = pickupNamesDeferred.await().toMutableList()
+                // pickupNameList = pickupNamesDeferred.await().toMutableList()
                 productNameList = productNamesDeferred.await().toMutableList()
                 productCategoryList = productCategoriesDeferred.await().toMutableList()
 
@@ -211,7 +211,7 @@ class CompletedTransactionsListFragment : Fragment() {
                         putString("orderDocumentID", recyclerViewData.orderDocumentID)
                         putString("sellerName", sellerNameList[position])
                         putString("userName", userNameList[position])
-                        putString("pickupName", pickupNameList[position])
+                        // putString("pickupName", pickupNameList[position])
                         putString("productName", productNameList[position])
                         putString("orderTime", recyclerViewData.orderTime.toString())
                         putString("productPrice", recyclerViewData.productPrice.toString())
@@ -334,7 +334,7 @@ class CompletedTransactionsListFragment : Fragment() {
 
             val seller = sellerNameList[originalIndex]
             val buyer = userNameList[originalIndex]
-            val pickup = pickupNameList[originalIndex]
+            // val pickup = pickupNameList[originalIndex]
             val product = productNameList[originalIndex]
 
             // 판매자와 구매자를 나란히 보여주는 방식
@@ -346,7 +346,7 @@ class CompletedTransactionsListFragment : Fragment() {
                         putString("orderDocumentID", item.orderDocumentID)
                         putString("sellerName", seller)
                         putString("userName", buyer)
-                        putString("pickupName", pickup)
+                        // putString("pickupName", pickup)
                         putString("productName", product)
                         putString("orderTime", item.orderTime.toString())
                         putString("productPrice", item.productPrice.toString())

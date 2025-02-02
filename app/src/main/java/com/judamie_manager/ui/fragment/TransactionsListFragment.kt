@@ -30,14 +30,6 @@ class TransactionsListFragment : Fragment() {
     lateinit var fragmentTransactionsListBinding: FragmentTransactionsListBinding
     lateinit var serviceActivity: ServiceActivity
 
-    // 프레그레스바를 위한 변수
-    lateinit var progressBar: ProgressBar
-    var isProgressVisible = false
-
-//    // ReyclerView 구성을 위한 임시 데이터
-//    val tempList = Array(100) {
-//        "판매자 ${it + 1} <-> 구매자 ${it + 1}"
-//    }
 
     // RecyclerView를 구성하기 위해 사용할 리스트
     var recyclerViewList = mutableListOf<OrderDataModel>()
@@ -47,21 +39,10 @@ class TransactionsListFragment : Fragment() {
     // 구매자 이름 리스트
     var userNameList = mutableListOf<String>()
     // 픽업지 이름 리스트
-    var pickupNameList = mutableListOf<String>()
+    // var pickupNameList = mutableListOf<String>()
     // 상품 이름 리스트
     var productNameList = mutableListOf<String>()
 
-
-//    override fun onResume() {
-//        super.onResume()
-//
-//        // 처음에만 프로그레스바를 띄우고 이후에는 띄우지 않음
-//        if (!isProgressVisible) {
-//            fragmentTransactionsListBinding.progressBar.visibility = View.VISIBLE
-//            isProgressVisible = true
-//            refreshRecyclerView()
-//        }
-//    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
@@ -97,38 +78,6 @@ class TransactionsListFragment : Fragment() {
         }
     }
 
-//    // 데이터를 가져와 RecyclerView를 갱신하는 메서드
-//    fun refreshRecyclerView(){
-//        CoroutineScope(Dispatchers.Main).launch {
-//            val work1 = async(Dispatchers.IO){
-//                OrderRepository.getOrderDataWithoutState(4)
-//            }
-//            recyclerViewList = work1.await()
-//
-//            val sellerIds = recyclerViewList.map { it.sellerDocumentID }
-//            sellerNameList = withContext(Dispatchers.IO) {
-//                OrderRepository.getSellerNamesByIds(sellerIds).toMutableList()
-//            }
-//
-//            val userIds = recyclerViewList.map { it.userDocumentID }
-//            userNameList = withContext(Dispatchers.IO) {
-//                OrderRepository.getUserNamesByIds(userIds).toMutableList()
-//            }
-//
-//            val pickupIds = recyclerViewList.map { it.pickupLocDocumentID }
-//            pickupNameList =  withContext(Dispatchers.IO) {
-//                OrderRepository.getPickupNamesByIds(pickupIds).toMutableList()
-//            }
-//
-//            val productIds = recyclerViewList.map { it.productDocumentID }
-//            productNameList =  withContext(Dispatchers.IO) {
-//                OrderRepository.getProductNamesByIds(productIds).toMutableList()
-//            }
-//
-//
-//            fragmentTransactionsListBinding.recyclerviewTransactionList.adapter?.notifyDataSetChanged()
-//        }
-//    }
 
     // 데이터를 가져와 RecyclerView를 갱신하는 메서드
     fun refreshRecyclerView(){
@@ -144,7 +93,7 @@ class TransactionsListFragment : Fragment() {
             if (recyclerViewList.isNotEmpty()) {
                 val sellerIds = recyclerViewList.map { it.sellerDocumentID }
                 val userIds = recyclerViewList.map { it.userDocumentID }
-                val pickupIds = recyclerViewList.map { it.pickupLocDocumentID }
+                // val pickupIds = recyclerViewList.map { it.pickupLocDocumentID }
                 val productIds = recyclerViewList.map { it.productDocumentID }
 
                 val sellerNamesDeferred = async(Dispatchers.IO) {
@@ -153,9 +102,9 @@ class TransactionsListFragment : Fragment() {
                 val userNamesDeferred = async(Dispatchers.IO) {
                     OrderRepository.getUserNamesByIds(userIds)
                 }
-                val pickupNamesDeferred = async(Dispatchers.IO) {
-                    OrderRepository.getPickupNamesByIds(pickupIds)
-                }
+//                val pickupNamesDeferred = async(Dispatchers.IO) {
+//                    OrderRepository.getPickupNamesByIds(pickupIds)
+//                }
                 val productNamesDeferred = async(Dispatchers.IO) {
                     OrderRepository.getProductNamesByIds(productIds)
                 }
@@ -166,7 +115,7 @@ class TransactionsListFragment : Fragment() {
                 // 모든 데이터를 기다린 후 처리
                 sellerNameList = sellerNamesDeferred.await().toMutableList()
                 userNameList = userNamesDeferred.await().toMutableList()
-                pickupNameList = pickupNamesDeferred.await().toMutableList()
+                // pickupNameList = pickupNamesDeferred.await().toMutableList()
                 productNameList = productNamesDeferred.await().toMutableList()
 
                 fragmentTransactionsListBinding.progressBar.visibility = View.GONE
@@ -178,45 +127,7 @@ class TransactionsListFragment : Fragment() {
             }
 
 
-//            // 만약 orderData가 비어있다면 RecyclerView 갱신하지 않음
-//            if (recyclerViewList.isNotEmpty()) {
-//                val sellerIds = recyclerViewList.map { it.sellerDocumentID }
-//                Log.d("OrderData", "Seller ID: $sellerIds")
-//                sellerNameList = withContext(Dispatchers.IO) {
-//                    OrderRepository.getSellerNamesByIds(sellerIds).toMutableList()
-//                }
-//                Log.d("OrderData", "Seller: $sellerNameList")
-//
-//                // sellerName이 비었으면 RecyclerView 갱신하지 않음
-//                if (sellerNameList.isNotEmpty()) {
-//                    val userIds = recyclerViewList.map { it.userDocumentID }
-//                    userNameList = withContext(Dispatchers.IO) {
-//                        OrderRepository.getUserNamesByIds(userIds).toMutableList()
-//                    }
-//
-//                    // userName이 비었으면 RecyclerView 갱신하지 않음
-//                    if (userNameList.isNotEmpty()) {
-//                        val pickupIds = recyclerViewList.map { it.pickupLocDocumentID }
-//                        pickupNameList = withContext(Dispatchers.IO) {
-//                            OrderRepository.getPickupNamesByIds(pickupIds).toMutableList()
-//                        }
-//
-//                        // pickupName이 비었으면 RecyclerView 갱신하지 않음
-//                        if (pickupNameList.isNotEmpty()) {
-//                            val productIds = recyclerViewList.map { it.productDocumentID }
-//                            productNameList = withContext(Dispatchers.IO) {
-//                                OrderRepository.getProductNamesByIds(productIds).toMutableList()
-//                            }
-//
-//                            // productName이 비었으면 RecyclerView 갱신하지 않음
-//                            if (productNameList.isNotEmpty()) {
-//                                // 데이터가 모두 존재할 때만 RecyclerView 갱신
-//                                fragmentTransactionsListBinding.recyclerviewTransactionList.adapter?.notifyDataSetChanged()
-//                            }
-//                        }
-//                    }
-//                }
-//            }
+
         }
     }
 
@@ -259,7 +170,7 @@ class TransactionsListFragment : Fragment() {
 //                        putString("productName", productNameList.toString())
                         putString("sellerName", sellerNameList[position])
                         putString("userName", userNameList[position])
-                        putString("pickupName", pickupNameList[position])
+                        // putString("pickupName", pickupNameList[position])
                         putString("productName", productNameList[position])
 
                         putString("orderTime", recyclerViewData.orderTime.toString())
