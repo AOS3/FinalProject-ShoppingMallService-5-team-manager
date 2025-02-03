@@ -139,22 +139,50 @@ class AddPickupLocationFragment : Fragment() {
 
             var isValid = true
 
-            // 픽업지 이름 체크
-            if (pickupName.isEmpty()) {
-                textFieldPickupName.error = "픽업지 이름이 입력되지 않았습니다."
-                textFieldPickupName.editText?.requestFocus()
-                isValid = false
-            } else {
-                textFieldPickupName.error = null
-            }
+//            // 픽업지 이름 체크
+//            if (pickupName.isEmpty()) {
+//                textFieldPickupName.error = "픽업지 이름이 입력되지 않았습니다."
+//                textFieldPickupName.editText?.requestFocus()
+//                isValid = false
+//            } else {
+//                textFieldPickupName.error = null
+//            }
+//
+//            // 도로명 주소 체크
+//            if (dolomyeongAddress.isEmpty()) {
+//                textFieldDolomyeong.error = "도로명주소가 입력되지 않았습니다."
+//                textFieldDolomyeong.editText?.requestFocus()
+//                isValid = false
+//            } else {
+//                textFieldDolomyeong.error = null
+//            }
+//
+//            // 상세 주소 체크
+//            if (detailAddress.isEmpty()) {
+//                textFieldDetailAddress.error = "상세주소가 입력되지 않았습니다."
+//                textFieldDetailAddress.editText?.requestFocus()
+//                isValid = false
+//            } else {
+//                textFieldDetailAddress.error = null
+//            }
+//
+//            // 전화번호 체크
+//            if (phoneNumber.isEmpty()) {
+//                textFieldPhoneNumber.error = "전화번호가 입력되지 않았습니다."
+//                textFieldPhoneNumber.editText?.requestFocus()
+//                isValid = false
+//            } else {
+//                textFieldPhoneNumber.error = null
+//            }
 
-            // 도로명 주소 체크
-            if (dolomyeongAddress.isEmpty()) {
-                textFieldDolomyeong.error = "도로명주소가 입력되지 않았습니다."
-                textFieldDolomyeong.editText?.requestFocus()
+
+            // 전화번호 체크
+            if (phoneNumber.isEmpty()) {
+                textFieldPhoneNumber.error = "전화번호가 입력되지 않았습니다."
+                textFieldPhoneNumber.editText?.requestFocus()
                 isValid = false
             } else {
-                textFieldDolomyeong.error = null
+                textFieldPhoneNumber.error = null
             }
 
             // 상세 주소 체크
@@ -166,13 +194,22 @@ class AddPickupLocationFragment : Fragment() {
                 textFieldDetailAddress.error = null
             }
 
-            // 전화번호 체크
-            if (phoneNumber.isEmpty()) {
-                textFieldPhoneNumber.error = "전화번호가 입력되지 않았습니다."
-                textFieldPhoneNumber.editText?.requestFocus()
+            // 도로명 주소 체크
+            if (dolomyeongAddress.isEmpty()) {
+                textFieldDolomyeong.error = "도로명주소가 입력되지 않았습니다."
+                textFieldDolomyeong.editText?.requestFocus()
                 isValid = false
             } else {
-                textFieldPhoneNumber.error = null
+                textFieldDolomyeong.error = null
+            }
+
+            // 픽업지 이름 체크
+            if (pickupName.isEmpty()) {
+                textFieldPickupName.error = "픽업지 이름이 입력되지 않았습니다."
+                textFieldPickupName.editText?.requestFocus()
+                isValid = false
+            } else {
+                textFieldPickupName.error = null
             }
 
             // 모두 입력했을 시 픽업지 등록하고(나중에 수정,,,)

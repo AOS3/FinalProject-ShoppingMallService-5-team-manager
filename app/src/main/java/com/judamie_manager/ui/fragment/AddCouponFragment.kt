@@ -107,7 +107,7 @@ class AddCouponFragment : Fragment() {
                 }
             } else {
                 // 날짜가 비어 있으면 현재 시간을 기본 값으로 사용
-                couponPeriod = Timestamp.now()
+                // couponPeriod = Timestamp.now()
             }
 
             // 시간
@@ -115,101 +115,103 @@ class AddCouponFragment : Fragment() {
 
             var isValid = true
 
-//            // 쿠폰명 체크
-//            if (couponName.isEmpty()) {
-//                textFieldCouponName.error = "쿠폰명을 입력해주세요."
-//                // textFieldCouponName.editText?.requestFocus()
-//                serviceActivity.showSoftInput(textFieldCouponName.editText!!)
-//                isValid = false
-//            } else {
-//                textFieldCouponName.error = null
-//            }
-//
-//            // 쿠폰 할인율 체크
-//            if (couponDiscountRate.isEmpty()) {
-//                textFieldCouponSale.error = "할인율을 입력해주세요."
-//                // textFieldCouponSale.editText?.requestFocus()
-//                serviceActivity.showSoftInput(textFieldCouponSale.editText!!)
-//                isValid = false
-//            } else {
-//                val sale = couponDiscountRate.toIntOrNull()
-//                if (sale == null || sale < 0 || sale > 100) {
-//                    textFieldCouponSale.error = "0에서 100 사이의 숫자를 입력해주세요."
-//                    serviceActivity.showSoftInput(textFieldCouponSale.editText!!)
-//                    isValid = false
-//                } else {
-//                    textFieldCouponSale.error = null
-//                }
-//            }
-//
-//            // 쿠폰 사용 기한 체크
-//            if (couponPeriod == null) {
-//                textFieldCouponDate.error = "사용기한을 입력해주세요."
-//                isValid = false
-//            } else {
-//                val selectedDate = couponPeriod.toDate() // Timestamp -> Date 변환
-//
-//                val currentDate = Calendar.getInstance().apply {
-//                    set(Calendar.HOUR_OF_DAY, 0)
-//                    set(Calendar.MINUTE, 0)
-//                    set(Calendar.SECOND, 0)
-//                    set(Calendar.MILLISECOND, 0)
-//                }.time
-//
-//                if (selectedDate.before(currentDate)) {
-//                    textFieldCouponDate.error = "사용기한은 오늘 이후 날짜여야 합니다."
-//                    isValid = false
-//                } else {
-//                    textFieldCouponDate.error = null
-//                }
-//            }
+
+
+            // 쿠폰 사용 기한 체크
+            if (couponPeriod == null) {
+                textFieldCouponDate.error = "사용기한을 입력해주세요."
+                isValid = false
+            } else {
+                val selectedDate = couponPeriod.toDate() // Timestamp -> Date 변환
+
+                val currentDate = Calendar.getInstance().apply {
+                    set(Calendar.HOUR_OF_DAY, 0)
+                    set(Calendar.MINUTE, 0)
+                    set(Calendar.SECOND, 0)
+                    set(Calendar.MILLISECOND, 0)
+                }.time
+
+                if (selectedDate.before(currentDate)) {
+                    textFieldCouponDate.error = "사용기한은 오늘 이후 날짜여야 합니다."
+                    isValid = false
+                } else {
+                    textFieldCouponDate.error = null
+                }
+            }
+
+            // 쿠폰 할인율 체크
+            if (couponDiscountRate.isEmpty()) {
+                textFieldCouponSale.error = "할인율을 입력해주세요."
+                // textFieldCouponSale.editText?.requestFocus()
+                serviceActivity.showSoftInput(textFieldCouponSale.editText!!)
+                isValid = false
+            } else {
+                val sale = couponDiscountRate.toIntOrNull()
+                if (sale == null || sale < 0 || sale > 100) {
+                    textFieldCouponSale.error = "0에서 100 사이의 숫자를 입력해주세요."
+                    serviceActivity.showSoftInput(textFieldCouponSale.editText!!)
+                    isValid = false
+                } else {
+                    textFieldCouponSale.error = null
+                }
+            }
 
             // 쿠폰명 체크
             if (couponName.isEmpty()) {
                 textFieldCouponName.error = "쿠폰명을 입력해주세요."
+                // textFieldCouponName.editText?.requestFocus()
                 serviceActivity.showSoftInput(textFieldCouponName.editText!!)
                 isValid = false
             } else {
                 textFieldCouponName.error = null
-
-                // 쿠폰 할인율 체크 (쿠폰명이 유효한 경우에만)
-                if (couponDiscountRate.isEmpty()) {
-                    textFieldCouponSale.error = "할인율을 입력해주세요."
-                    serviceActivity.showSoftInput(textFieldCouponSale.editText!!)
-                    isValid = false
-                } else {
-                    val sale = couponDiscountRate.toIntOrNull()
-                    if (sale == null || sale < 0 || sale > 100) {
-                        textFieldCouponSale.error = "0에서 100 사이의 숫자를 입력해주세요."
-                        serviceActivity.showSoftInput(textFieldCouponSale.editText!!)
-                        isValid = false
-                    } else {
-                        textFieldCouponSale.error = null
-
-                        // 쿠폰 사용 기한 체크 (할인율이 유효한 경우에만)
-                        if (couponPeriod == null) {
-                            textFieldCouponDate.error = "사용기한을 입력해주세요."
-                            isValid = false
-                        } else {
-                            val selectedDate = couponPeriod.toDate() // Timestamp -> Date 변환
-
-                            val currentDate = Calendar.getInstance().apply {
-                                set(Calendar.HOUR_OF_DAY, 0)
-                                set(Calendar.MINUTE, 0)
-                                set(Calendar.SECOND, 0)
-                                set(Calendar.MILLISECOND, 0)
-                            }.time
-
-                            if (selectedDate.before(currentDate)) {
-                                textFieldCouponDate.error = "사용기한은 오늘 이후 날짜여야 합니다."
-                                isValid = false
-                            } else {
-                                textFieldCouponDate.error = null
-                            }
-                        }
-                    }
-                }
             }
+
+//            // 쿠폰명 체크
+//            if (couponName.isEmpty()) {
+//                textFieldCouponName.error = "쿠폰명을 입력해주세요."
+//                serviceActivity.showSoftInput(textFieldCouponName.editText!!)
+//                isValid = false
+//            } else {
+//                textFieldCouponName.error = null
+//
+//                // 쿠폰 할인율 체크 (쿠폰명이 유효한 경우에만)
+//                if (couponDiscountRate.isEmpty()) {
+//                    textFieldCouponSale.error = "할인율을 입력해주세요."
+//                    serviceActivity.showSoftInput(textFieldCouponSale.editText!!)
+//                    isValid = false
+//                } else {
+//                    val sale = couponDiscountRate.toIntOrNull()
+//                    if (sale == null || sale < 0 || sale > 100) {
+//                        textFieldCouponSale.error = "0에서 100 사이의 숫자를 입력해주세요."
+//                        serviceActivity.showSoftInput(textFieldCouponSale.editText!!)
+//                        isValid = false
+//                    } else {
+//                        textFieldCouponSale.error = null
+//
+//                        // 쿠폰 사용 기한 체크 (할인율이 유효한 경우에만)
+//                        if (couponPeriod == null) {
+//                            textFieldCouponDate.error = "사용기한을 입력해주세요."
+//                            isValid = false
+//                        } else {
+//                            val selectedDate = couponPeriod.toDate() // Timestamp -> Date 변환
+//
+//                            val currentDate = Calendar.getInstance().apply {
+//                                set(Calendar.HOUR_OF_DAY, 0)
+//                                set(Calendar.MINUTE, 0)
+//                                set(Calendar.SECOND, 0)
+//                                set(Calendar.MILLISECOND, 0)
+//                            }.time
+//
+//                            if (selectedDate.before(currentDate)) {
+//                                textFieldCouponDate.error = "사용기한은 오늘 이후 날짜여야 합니다."
+//                                isValid = false
+//                            } else {
+//                                textFieldCouponDate.error = null
+//                            }
+//                        }
+//                    }
+//                }
+//            }
 
 
             // 모두 입력했을 시 쿠폰 등록하고(나중에 수정,,,) 쿠폰 목록 화면으로 이동

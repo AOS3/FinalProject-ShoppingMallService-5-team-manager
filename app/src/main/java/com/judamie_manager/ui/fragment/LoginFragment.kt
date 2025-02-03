@@ -76,25 +76,28 @@ class LoginFragment : Fragment() {
             textFieldUserLoginId.error = null
             textFieldUserLoginPw.error = null
 
+
+            // 비밀번호 입력 여부 확인
+            if (loginViewModel?.textFieldUserLoginPwEditTextText?.value?.isEmpty()!!) {
+                textFieldUserLoginPw.error = "비밀번호를 입력해주세요."
+                textFieldUserLoginPw.requestFocus()
+                // userActivity.showSoftInput(textFieldUserLoginPw.editText!!)
+                // 1초 뒤에 에러 메시지 제거
+                // clearErrorAfterDelay(textFieldUserLoginPw, 2000)
+            } else {
+                textFieldUserLoginPw.error = null
+            }
+
             // 아이디 입력 여부 확인
             if (loginViewModel?.textFieldUserLoginIdEditTextText?.value?.isEmpty()!!) {
                 textFieldUserLoginId.error = "아이디를 입력해주세요."
-                userActivity.showSoftInput(textFieldUserLoginId.editText!!)
+                textFieldUserLoginId.requestFocus() // 아이디 필드에 포커스를 맞춘다.
+                // userActivity.showSoftInput(textFieldUserLoginId.editText!!)
                 // 1초 뒤에 에러 메시지 제거
                 // clearErrorAfterDelay(textFieldUserLoginId, 2000)
             } else {
                 textFieldUserLoginId.error = null
 
-                // 비밀번호 입력 여부 확인
-                if (loginViewModel?.textFieldUserLoginPwEditTextText?.value?.isEmpty()!!) {
-                    textFieldUserLoginPw.error = "비밀번호를 입력해주세요."
-                    textFieldUserLoginPw.requestFocus()
-                    userActivity.showSoftInput(textFieldUserLoginPw.editText!!)
-                    // 1초 뒤에 에러 메시지 제거
-                    // clearErrorAfterDelay(textFieldUserLoginPw, 2000)
-                } else {
-                    textFieldUserLoginPw.error = null
-                }
             }
 
             // 사용자가 입력한 아이디와 비밀번호
