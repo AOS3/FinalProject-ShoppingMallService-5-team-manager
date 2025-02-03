@@ -91,14 +91,14 @@ class TransactionsListFragment : Fragment() {
 
             // recyclerViewList가 비어 있으면 갱신하지 않음
             if (recyclerViewList.isNotEmpty()) {
-                val sellerIds = recyclerViewList.map { it.sellerDocumentID }
+                //val sellerIds = recyclerViewList.map { it.sellerDocumentID }
                 val userIds = recyclerViewList.map { it.userDocumentID }
                 // val pickupIds = recyclerViewList.map { it.pickupLocDocumentID }
                 val productIds = recyclerViewList.map { it.productDocumentID }
 
-                val sellerNamesDeferred = async(Dispatchers.IO) {
-                    OrderRepository.getSellerNamesByIds(sellerIds)
-                }
+//                val sellerNamesDeferred = async(Dispatchers.IO) {
+//                    OrderRepository.getSellerNamesByIds(sellerIds)
+//                }
                 val userNamesDeferred = async(Dispatchers.IO) {
                     OrderRepository.getUserNamesByIds(userIds)
                 }
@@ -113,7 +113,7 @@ class TransactionsListFragment : Fragment() {
                 recyclerViewList = work1.await()
 
                 // 모든 데이터를 기다린 후 처리
-                sellerNameList = sellerNamesDeferred.await().toMutableList()
+                //sellerNameList = sellerNamesDeferred.await().toMutableList()
                 userNameList = userNamesDeferred.await().toMutableList()
                 // pickupNameList = pickupNamesDeferred.await().toMutableList()
                 productNameList = productNamesDeferred.await().toMutableList()
@@ -128,7 +128,7 @@ class TransactionsListFragment : Fragment() {
                 // 데이터가 비어 있을 경우 UI를 업데이트
                 fragmentTransactionsListBinding.progressBar.visibility = View.GONE
 
-                sellerNameList.clear()
+                //sellerNameList.clear()
                 userNameList.clear()
                 productNameList.clear()
 
@@ -168,7 +168,7 @@ class TransactionsListFragment : Fragment() {
 
         override fun onBindViewHolder(holder: MainViewHolder, position: Int) {
             val recyclerViewData = recyclerViewList[position]
-            holder.rowTransactionsListBinding.rowTransactionsListViewModel?.textViewTransactionsListText?.value = "판매자 : ${sellerNameList[position]} <-> 구매자 : ${userNameList[position]}"
+            holder.rowTransactionsListBinding.rowTransactionsListViewModel?.textViewTransactionsListText?.value = "판매자 : ${recyclerViewData.sellerDocumentID} <-> 구매자 : ${userNameList[position]}"
             holder.rowTransactionsListBinding.apply{
                 root.setOnClickListener {
                     val dataBundle = Bundle().apply {
@@ -177,7 +177,8 @@ class TransactionsListFragment : Fragment() {
 //                        putString("userName", userNameList.toString())
 //                        putString("pickupName", pickupNameList.toString())
 //                        putString("productName", productNameList.toString())
-                        putString("sellerName", sellerNameList[position])
+                        //putString("sellerName", sellerNameList[position])
+                        putString("sellerName", recyclerViewData.sellerDocumentID)
                         putString("userName", userNameList[position])
                         // putString("pickupName", pickupNameList[position])
                         putString("productName", productNameList[position])

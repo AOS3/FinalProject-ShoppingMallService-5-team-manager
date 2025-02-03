@@ -451,7 +451,7 @@ class OrderRepository {
             // Firebase 요청을 병렬로 실행 (비어있는 productId는 "Unknown" 추가)
             val productRequests = productIds.map { productId ->
                 if (productId.isNotEmpty()) {
-                    firestore.collection("productData").document(productId).get()
+                    firestore.collection("ProductData").document(productId).get()
                 } else {
                     null
                 }
@@ -526,7 +526,7 @@ class OrderRepository {
             // Firebase 요청을 병렬로 실행 (비어있는 productId는 "Unknown" 추가)
             val productRequests = productIds.map { productId ->
                 if (productId.isNotEmpty()) {
-                    firestore.collection("productData").document(productId).get()
+                    firestore.collection("ProductData").document(productId).get()
                 } else {
                     null
                 }
