@@ -84,16 +84,17 @@ class LoginFragment : Fragment() {
                 // clearErrorAfterDelay(textFieldUserLoginId, 2000)
             } else {
                 textFieldUserLoginId.error = null
-            }
-            // 비밀번호 입력 여부 확인
-            if (loginViewModel?.textFieldUserLoginPwEditTextText?.value?.isEmpty()!!) {
-                textFieldUserLoginPw.error = "비밀번호를 입력해주세요."
-                textFieldUserLoginPw.requestFocus()
-                userActivity.showSoftInput(textFieldUserLoginPw.editText!!)
-                // 1초 뒤에 에러 메시지 제거
-                // clearErrorAfterDelay(textFieldUserLoginPw, 2000)
-            } else {
-                textFieldUserLoginPw.error = null
+
+                // 비밀번호 입력 여부 확인
+                if (loginViewModel?.textFieldUserLoginPwEditTextText?.value?.isEmpty()!!) {
+                    textFieldUserLoginPw.error = "비밀번호를 입력해주세요."
+                    textFieldUserLoginPw.requestFocus()
+                    userActivity.showSoftInput(textFieldUserLoginPw.editText!!)
+                    // 1초 뒤에 에러 메시지 제거
+                    // clearErrorAfterDelay(textFieldUserLoginPw, 2000)
+                } else {
+                    textFieldUserLoginPw.error = null
+                }
             }
 
             // 사용자가 입력한 아이디와 비밀번호
@@ -124,8 +125,8 @@ class LoginFragment : Fragment() {
                     textFieldUserLoginPw.error = "아이디 혹은 비밀번호가 잘못되었습니다."
 
                     // 1초 후에 에러 메시지 제거
-                    clearErrorAfterDelay(textFieldUserLoginId, 1000)
-                    clearErrorAfterDelay(textFieldUserLoginPw, 1000)
+//                    clearErrorAfterDelay(textFieldUserLoginId, 1000)
+//                    clearErrorAfterDelay(textFieldUserLoginPw, 1000)
                 }
             }
         }
