@@ -1,12 +1,14 @@
 package com.judamie_manager.ui.fragment
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.MutableLiveData
+import com.google.firebase.firestore.FirebaseFirestore
 import com.judamie_manager.R
 import com.judamie_manager.activity.ServiceActivity
 import com.judamie_manager.util.ServiceFragmentName
@@ -94,35 +96,76 @@ class ShowOneCompletedTransactionDetailFragment : Fragment() {
 
     }
 
-    // 상세 거래 내역 텍스트뷰에 값 넣기
+//    // 상세 거래 내역 텍스트뷰에 값 넣기
+//    fun settingTransactionTextView() {
+//        fragmentShowOneCompletedTransactionDetailBinding.showOneCompletedTransactionDetailViewModel?.apply {
+//
+//            // 거래 완료 시간을 포맷팅하여 UI에 반영
+//            val depositTime = serviceActivity.transactionFinishTimes[orderDocumentID]
+////            val depositDate =
+////                SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date(depositTime))
+//            val depositDate = if (depositTime != null) {
+//                SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date(depositTime))
+//            } else {
+//                ""
+//            }
+//
+//            val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()) // 원하는 형식 지정
+//            val formattedDate = sdf.format(Date(orderTime.toLong()))
+//
+//            // LiveData에 데이터 세팅
+//            textViewSellerText.value = "판매자 : $sellerName"
+//            textViewCustomerText.value = "구매자 : $userName"
+//            textViewOrderDateText.value = "주문날짜 : ${formattedDate}"
+//            textViewTransactionDateText.value = "거래날짜 : $depositDate"
+//            textViewProductText.value = "거래품목 : $productName"
+//            textViewQuantityText.value = "구매수량 : ${orderCount}개"
+//            textViewPriceText.value = "개당 가격 : ${productPrice}원"
+//            textViewTotalPriceText.value = "총 가격 : ${orderPriceAmount}원"
+//            textViewDeliveryText.value = "배송상태 : 배송 완료"
+//            textViewPickupText.value = "픽업상태 : 픽업 완료"
+//
+//        }
+//    }
+
     fun settingTransactionTextView() {
         fragmentShowOneCompletedTransactionDetailBinding.showOneCompletedTransactionDetailViewModel?.apply {
+            val orderRef = FirebaseFirestore.getInstance()
+                .collection("OrderData")
+                .document(orderDocumentID)
 
-            // 거래 완료 시간을 포맷팅하여 UI에 반영
-            val depositTime = serviceActivity.transactionFinishTimes[orderDocumentID]
-//            val depositDate =
-//                SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date(depositTime))
-            val depositDate = if (depositTime != null) {
-                SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date(depositTime))
-            } else {
-                ""
-            }
+            orderRef.get()
+                .addOnSuccessListener { document ->
+                    if (document != null && document.exists()) {
+                        val orderTransactionTime = document.getLong("orderTransactionTime")
 
-            val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()) // 원하는 형식 지정
-            val formattedDate = sdf.format(Date(orderTime.toLong()))
+                        val depositDate = if (orderTransactionTime != null) {
+                            SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date(orderTransactionTime))
+                        } else {
+                            "정보 없음"
+                        }
 
-            // LiveData에 데이터 세팅
-            textViewSellerText.value = "판매자 : $sellerName"
-            textViewCustomerText.value = "구매자 : $userName"
-            textViewOrderDateText.value = "주문날짜 : ${formattedDate}"
-            textViewTransactionDateText.value = "거래날짜 : $depositDate"
-            textViewProductText.value = "거래품목 : $productName"
-            textViewQuantityText.value = "구매수량 : ${orderCount}개"
-            textViewPriceText.value = "개당 가격 : ${productPrice}원"
-            textViewTotalPriceText.value = "총 가격 : ${orderPriceAmount}원"
-            textViewDeliveryText.value = "배송상태 : 배송 완료"
-            textViewPickupText.value = "픽업상태 : 픽업 완료"
+                        val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+                        val formattedDate = sdf.format(Date(orderTime.toLong()))
 
+                        // LiveData에 데이터 세팅
+                        textViewSellerText.value = "판매자 : $sellerName"
+                        textViewCustomerText.value = "구매자 : $userName"
+                        textViewOrderDateText.value = "주문날짜 : ${formattedDate}"
+                        textViewTransactionDateText.value = "거래날짜 : $depositDate"
+                        textViewProductText.value = "거래품목 : $productName"
+                        textViewQuantityText.value = "구매수량 : ${orderCount}개"
+                        textViewPriceText.value = "개당 가격 : ${productPrice}원"
+                        textViewTotalPriceText.value = "총 가격 : ${orderPriceAmount}원"
+                        textViewDeliveryText.value = "배송상태 : 배송 완료"
+                        textViewPickupText.value = "픽업상태 : 픽업 완료"
+                    }
+                }
+                .addOnFailureListener { e ->
+                    Log.e("FirestoreError", "orderTransactionTime 가져오기 실패", e)
+                    textViewTransactionDateText.value = "거래날짜 : 정보 없음"
+                }
         }
     }
+
 }
