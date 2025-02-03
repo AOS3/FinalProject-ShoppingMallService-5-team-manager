@@ -3,6 +3,7 @@ package com.judamie_manager.activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Rect
+import android.os.Build
 import android.os.Bundle
 import android.os.SystemClock
 import android.text.TextUtils.replace
@@ -11,6 +12,7 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
@@ -42,6 +44,14 @@ class UserActivity : AppCompatActivity() {
         enableEdgeToEdge()
 
         activityUserBinding = DataBindingUtil.setContentView(this@UserActivity, R.layout.activity_user)
+
+        // 상태바 색상을 강제로 흰색으로 설정
+        window.statusBarColor = ContextCompat.getColor(this, R.color.white)
+
+        // Material3에서 시스템 UI 옵션 추가
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+        }
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
